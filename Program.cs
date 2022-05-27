@@ -11,7 +11,10 @@ namespace batalha_naval
             // int opcaoEscolhida = Entrada();
 
             // if (opcaoEscolhida == 2) Jogar2();
-            ConstroiMapa();
+            //ConstroiMapa();
+
+            var teste = Console.ReadLine();
+            Console.WriteLine(VerificaCoordenadas(teste));
         }
 
         public static int Entrada()
@@ -43,6 +46,8 @@ namespace batalha_naval
 
             //chama o jogo e tals
             // fazer a construcao dos mapas genericos
+
+
 
 
 
@@ -144,6 +149,52 @@ namespace batalha_naval
             Console.WriteLine("   |");
             Console.WriteLine($" J | {mapa[0, 0]}  {mapa[9, 1]}  {mapa[9, 2]}  {mapa[9, 3]}  {mapa[9, 4]}  {mapa[9, 5]}  {mapa[9, 6]}  {mapa[9, 7]}  {mapa[9, 8]}  {mapa[9, 9]}");
 
+        }
+
+        public static bool VerificaCoordenadas(string palavra)
+        { 
+            string letras = "ABCDEFGHIJ";
+            string numeros = "1 2 3 4 5 6 7 8 9 10";
+            
+            if(palavra.Length == 4)
+            {
+                if(!letras.Contains(palavra[0]) || !letras.Contains(palavra[2])) return false;
+
+                if(!numeros.Contains(palavra[1]) || !numeros.Contains(palavra[3])) return false;
+
+                return true;
+            }
+
+            if(palavra.Length == 6)
+            {
+                if(!letras.Contains(palavra[0]) || !letras.Contains(palavra[3])) return false;
+
+                if(!numeros.Contains($"{palavra[1]}{palavra[2]}") || !numeros.Contains($"{palavra[4]}{palavra[5]}")) return false;
+            
+                return true;
+            }
+
+            if(palavra.Length == 5)
+            {   
+                if(letras.Contains(palavra[2]))
+                {
+                    if(!letras.Contains(palavra[0])) return false;
+                    if(!numeros.Contains(palavra[1]) || !numeros.Contains($"{palavra[3]}{palavra[4]}")) return false;
+                }
+                else if(numeros.Contains(palavra[2]))
+                {
+                    if(!letras.Contains(palavra[0]) || !letras.Contains(palavra[3])) return false;
+                    if(!numeros.Contains($"{palavra[1]}{palavra[2]}") || !numeros.Contains(palavra[4])) return false;
+                }
+                else
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
     }
