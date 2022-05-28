@@ -11,7 +11,6 @@ namespace batalha_naval
             int opcaoEscolhida = Entrada();
             if (opcaoEscolhida == 2) Jogar2();
         }
-
         public static int Entrada()
         {
             bool opcaoControle;
@@ -24,53 +23,43 @@ namespace batalha_naval
                 opcaoControle = int.TryParse(opcao, out opcaoEscolhida);
                 if(opcaoEscolhida != 1 && opcaoEscolhida !=2) opcaoControle = false;        
             }while(!opcaoControle);
-            
             return opcaoEscolhida;
         }  
-
         public static void Jogar2()
         {
             Console.WriteLine("Digite o nome do player 1");
             var player1 = Console.ReadLine();
-
             Console.WriteLine("Digite o nome do player 2");
             var player2 = Console.ReadLine();
-
             var posicoesPlayer1 = PosicoesNoMapa(player1);
             var posicoesPlayer2 = PosicoesNoMapa(player2);
         }
-
         public static string[,] PosicoesNoMapa(string player)
         {
             var lista = new List<int>{1,2,3,4}; //portaAvioes,navioTanque,destroyers,submarinos = 4;
             var posicoesPlayer = new string[10,10];
             var resultado = new Tuple<List<int>, string[,]>(lista, posicoesPlayer);
-
             while(lista.Sum() > 0)
             {
-            Console.WriteLine($"Bem vindo {player}!!!");
-            Console.WriteLine(@$"Você tem disponível {lista[0]} Porta Aviões, 
-            {lista[1]} Navio Tanque, {lista[2]} Destroyers, {lista[3]} Submarinos");
-
-            resultado = TipoDaEmbarcacao(lista, posicoesPlayer);
+            resultado = TipoDaEmbarcacao(lista, posicoesPlayer, player);
             lista = resultado.Item1;
             posicoesPlayer = resultado.Item2;
-            //o verifica no mapa vai ter que vir antes pra pedir pra reescrever a entrada
-            //o caso abaixo ja e do sucesso
             }
-
             return posicoesPlayer;
         }         
 
-        public static Tuple<List<int>, string[,]> TipoDaEmbarcacao(List<int> lista, string[,] posicoesPlayer)
+        public static Tuple<List<int>, string[,]> TipoDaEmbarcacao(List<int> lista, string[,] posicoesPlayer, string player)
         {
             bool validador = false;
-            var teste = new string[2];
             bool validaQuantidade = false;
             string escolha;
             string[,] posicoes = posicoesPlayer;
             do
             {
+            Console.WriteLine($"Bem vindo {player}!!!");
+            Console.WriteLine(@$"Você tem disponível {lista[0]} Porta Aviões, 
+            {lista[1]} Navio Tanque, {lista[2]} Destroyers, {lista[3]} Submarinos");
+            Console.WriteLine("");
             Console.WriteLine("Qual o tipo de embarcação? Digite");
             Console.WriteLine("PS para Porta-Aviões"); //tem 1 e ocupa 5 espacos
             Console.WriteLine("NT para Navio-Tanque"); //tem 2 e ocupa 4 espacos
@@ -78,7 +67,6 @@ namespace batalha_naval
             Console.WriteLine("SB para Submarinos"); //tem 4 e ocupa 2 espacos
             escolha = Console.ReadLine();
             validador = escolha == "PS" || escolha == "NT" || escolha == "DS" || escolha == "SB";
-           
             if(validador == true)
             {
                 if(escolha == "PS")
@@ -138,14 +126,11 @@ namespace batalha_naval
             {
                 posicoes = VerificaCoordenadas(escolha,posicoesPlayer);
             }
-            
-            }while(!validador && validaQuantidade);
-
+            }while(!validador && !validaQuantidade);
             var retornar = new Tuple<List<int>, string[,]>(lista, posicoes);
             return retornar;
         }
-
-        public static string[,] VerificaCoordenadas(string escolha, string[,] posicoesPlayer) //void temp
+        public static string[,] VerificaCoordenadas(string escolha, string[,] posicoesPlayer)
         { 
             bool validaTamanho = true;
             do
@@ -162,133 +147,137 @@ namespace batalha_naval
                     if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[2])) validaTamanho = false;
 
                     if(!numeros.Contains(coordenadas[1]) || !numeros.Contains(coordenadas[3])) validaTamanho = false;
-                    
+                    Console.WriteLine($"validaTamanho {validaTamanho}");
                     if(validaTamanho)
                     {
                         comecoEfim[0] = $"{coordenadas[0]}{coordenadas[1]}";
-                        comecoEfim[1] = coordenadas.Substring(2);                    
+                        comecoEfim[1] = coordenadas.Substring(2); 
+                        Console.WriteLine($"comecoEfim 0 {comecoEfim[0]}");
+                        Console.WriteLine($"comecoEfim 1 {comecoEfim[1]}");   
+                        Console.WriteLine($"comecoEfim  {comecoEfim}");                 
                         validaTamanho = VerificaTamanho(comecoEfim, escolha);
+                        Console.WriteLine($"validaTamanho {validaTamanho}");
                         tipoEntrada = 1;
                     }                    
                 }
 
-                if(coordenadas.Length == 6)
-                {
-                    if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaTamanho = false;
-                    if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains($"{coordenadas[4]}{coordenadas[5]}")) validaTamanho = false;
-                    if(validaTamanho)
-                    {
-                        comecoEfim[0] = coordenadas.Substring(0,3);
-                        comecoEfim[1] = coordenadas.Substring(3,6);
-                        validaTamanho = VerificaTamanho(comecoEfim, escolha);
-                        tipoEntrada = 4;
-                    }
-                }
+                // if(coordenadas.Length == 6)
+                // {
+                //     if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaTamanho = false;
+                //     if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains($"{coordenadas[4]}{coordenadas[5]}")) validaTamanho = false;
+                //     if(validaTamanho)
+                //     {
+                //         comecoEfim[0] = coordenadas.Substring(0,3);
+                //         comecoEfim[1] = coordenadas.Substring(3,6);
+                //         validaTamanho = VerificaTamanho(comecoEfim, escolha);
+                //         tipoEntrada = 4;
+                //     }
+                // }
 
-                if(coordenadas.Length == 5)
-                {   
-                    if(letras.Contains(coordenadas[2]))
-                    {
-                        if(!letras.Contains(coordenadas[0])) validaTamanho = false;
-                        if(!numeros.Contains(coordenadas[1]) || !numeros.Contains($"{coordenadas[3]}{coordenadas[4]}")) validaTamanho = false;
-                        if(validaTamanho)
-                        {
-                            comecoEfim[0] = coordenadas.Substring(0,2);
-                            comecoEfim[1] = coordenadas.Substring(2,5);
-                            validaTamanho = VerificaTamanho(comecoEfim, escolha);
-                            tipoEntrada = 2;
-                        }
-                    }
-                    else if(numeros.Contains(coordenadas[2]))
-                    {
-                        if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaTamanho = false;
-                        if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains(coordenadas[4])) validaTamanho = false;
-                        if(validaTamanho)
-                        {
-                            comecoEfim[0] = coordenadas.Substring(0,3);
-                            comecoEfim[1] = coordenadas.Substring(3,5);
-                            validaTamanho = VerificaTamanho(comecoEfim, escolha);
-                            tipoEntrada = 3;
-                        }
-                    }
-                }
+                // if(coordenadas.Length == 5)
+                // {   
+                //     if(letras.Contains(coordenadas[2]))
+                //     {
+                //         if(!letras.Contains(coordenadas[0])) validaTamanho = false;
+                //         if(!numeros.Contains(coordenadas[1]) || !numeros.Contains($"{coordenadas[3]}{coordenadas[4]}")) validaTamanho = false;
+                //         if(validaTamanho)
+                //         {
+                //             comecoEfim[0] = coordenadas.Substring(0,2);
+                //             comecoEfim[1] = coordenadas.Substring(2,5);
+                //             validaTamanho = VerificaTamanho(comecoEfim, escolha);
+                //             tipoEntrada = 2;
+                //         }
+                //     }
+                //     else if(numeros.Contains(coordenadas[2]))
+                //     {
+                //         if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaTamanho = false;
+                //         if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains(coordenadas[4])) validaTamanho = false;
+                //         if(validaTamanho)
+                //         {
+                //             comecoEfim[0] = coordenadas.Substring(0,3);
+                //             comecoEfim[1] = coordenadas.Substring(3,5);
+                //             validaTamanho = VerificaTamanho(comecoEfim, escolha);
+                //             tipoEntrada = 3;
+                //         }
+                //     }
+                // }
 
-                if(validaTamanho)
-                    {   
-                        int inicial;
-                        int final;
-                        if(tipoEntrada == 1)
-                        {   
-                            Console.WriteLine($"tete {comecoEfim[0][0]}");
+                // if(validaTamanho)
+                //     {   
+                //         // int inicial;
+                //         // int final;
+                //         // if(tipoEntrada == 1)
+                //         // {   
+                //         //     Console.WriteLine($"tete {comecoEfim[0][0]}");
                             
-                            if(comecoEfim[0][0] == 'A')      inicial = 0;
-                            else if(comecoEfim[0][0] == 'B') inicial = 1;
-                            else if(comecoEfim[0][0] == 'C') inicial = 2;
-                            else if(comecoEfim[0][0] == 'D') inicial = 3;
-                            else if(comecoEfim[0][0] == 'E') inicial = 4;
-                            else if(comecoEfim[0][0] == 'F') inicial = 5;
-                            else if(comecoEfim[0][0] == 'G') inicial = 6;
-                            else if(comecoEfim[0][0] == 'H') inicial = 7;
-                            else if(comecoEfim[0][0] == 'I') inicial = 8;
-                            else inicial = 9;
+                //         //     if(comecoEfim[0][0] == 'A')      inicial = 0;
+                //         //     else if(comecoEfim[0][0] == 'B') inicial = 1;
+                //         //     else if(comecoEfim[0][0] == 'C') inicial = 2;
+                //         //     else if(comecoEfim[0][0] == 'D') inicial = 3;
+                //         //     else if(comecoEfim[0][0] == 'E') inicial = 4;
+                //         //     else if(comecoEfim[0][0] == 'F') inicial = 5;
+                //         //     else if(comecoEfim[0][0] == 'G') inicial = 6;
+                //         //     else if(comecoEfim[0][0] == 'H') inicial = 7;
+                //         //     else if(comecoEfim[0][0] == 'I') inicial = 8;
+                //         //     else inicial = 9;
 
-                            if(comecoEfim[1][0] == 'A')      final = 0;
-                            else if(comecoEfim[1][0] == 'B') final = 1;
-                            else if(comecoEfim[1][0] == 'C') final = 2;
-                            else if(comecoEfim[1][0] == 'D') final = 3;
-                            else if(comecoEfim[1][0] == 'E') final = 4;
-                            else if(comecoEfim[1][0] == 'F') final = 5;
-                            else if(comecoEfim[1][0] == 'G') final = 6;
-                            else if(comecoEfim[1][0] == 'H') final = 7;
-                            else if(comecoEfim[1][0] == 'I') final = 8;
-                            else final = 9;
+                //         //     if(comecoEfim[1][0] == 'A')      final = 0;
+                //         //     else if(comecoEfim[1][0] == 'B') final = 1;
+                //         //     else if(comecoEfim[1][0] == 'C') final = 2;
+                //         //     else if(comecoEfim[1][0] == 'D') final = 3;
+                //         //     else if(comecoEfim[1][0] == 'E') final = 4;
+                //         //     else if(comecoEfim[1][0] == 'F') final = 5;
+                //         //     else if(comecoEfim[1][0] == 'G') final = 6;
+                //         //     else if(comecoEfim[1][0] == 'H') final = 7;
+                //         //     else if(comecoEfim[1][0] == 'I') final = 8;
+                //         //     else final = 9;
 
-                            // if(inicial == final)
-                            // {
-                            //     int maior = 0;
-                            //     int menor = 0;
-                                //var teste1 = int.Parse(comecoEfim[0][1]);
-                                //var teste2 = int.Parse(comecoEfim[1][1]);
-                                // if(teste1 > teste2)
-                                // {
-                                //     maior = teste1;
-                                //     menor = teste2;
-                                // }
-                                // else
-                                // {
-                                    //maior = int.Parse(comecoEfim[1][1]);
-                                   // menor = int.Parse(comecoEfim[0][1]);
-                                //}
+                //         //     // if(inicial == final)
+                //         //     // {
+                //         //     //     int maior = 0;
+                //         //     //     int menor = 0;
+                //         //         //var teste1 = int.Parse(comecoEfim[0][1]);
+                //         //         //var teste2 = int.Parse(comecoEfim[1][1]);
+                //         //         // if(teste1 > teste2)
+                //         //         // {
+                //         //         //     maior = teste1;
+                //         //         //     menor = teste2;
+                //         //         // }
+                //         //         // else
+                //         //         // {
+                //         //             //maior = int.Parse(comecoEfim[1][1]);
+                //         //            // menor = int.Parse(comecoEfim[0][1]);
+                //         //         //}
 
-                                // for(var i = menor; i <= maior; i++ )
-                                // {
-                                //     posicoesPlayer[inicial,i] = "A";
-                                // }
-                            // }
-                            // else
-                            // {
-                            //     //fixa segunda e faz conta na primeira
-                            // }
-                        }
-                        // if(coordenadas[0][0] == coordenadas[1][0])
-                        // {
-                        //     //identifica qual a letra pra poder
-                        // }
+                //         //         // for(var i = menor; i <= maior; i++ )
+                //         //         // {
+                //         //         //     posicoesPlayer[inicial,i] = "A";
+                //         //         // }
+                //         //     // }
+                //         //     // else
+                //         //     // {
+                //         //     //     //fixa segunda e faz conta na primeira
+                //         //     // }
+                //         // }
+                //         // if(coordenadas[0][0] == coordenadas[1][0])
+                //         // {
+                //         //     //identifica qual a letra pra poder
+                //         // }
 
-                        //caso A1A5
-                        for(var i = 1; i <=5; i++)
-                        {
-                            posicoesPlayer[0,i] = "X";
-                        }
-                        break;
-                    }
-
+                //         //caso A1A5
+                //         // for(var i = 1; i <=5; i++)
+                //         // {
+                //         //     posicoesPlayer[0,i] = "X";
+                //         // }
+                //         // break;
+                //     }
             }while(!validaTamanho);
             return posicoesPlayer;
         }
 
         public static bool VerificaTamanho(string[] comecoEfim, string escolha)
         {
+            Console.WriteLine("dentro do verifica tamanho");
             if(comecoEfim[0][0] != comecoEfim[1][0] && comecoEfim[0][1] != comecoEfim[1][1])
             {
                 return false;
@@ -299,10 +288,12 @@ namespace batalha_naval
             if(escolha == "NT") tamanhoPermitido = 4;
             if(escolha == "DS") tamanhoPermitido = 3;
             if(escolha == "SB") tamanhoPermitido = 2;
+
+            Console.WriteLine($"tamanho permitido {tamanhoPermitido}");
             
             if(comecoEfim[0][0] == comecoEfim[1][0])
             {   
-                if(tamanhoPermitido - Math.Abs(comecoEfim[0][1] - comecoEfim[1][1]) != 0)
+                if(tamanhoPermitido - (Math.Abs(comecoEfim[0][1] - comecoEfim[1][1]) + 1) != 0)
                 {
                     return false;
                 }    
@@ -333,15 +324,12 @@ namespace batalha_naval
                 else if(comecoEfim[1][0] == 'I') final = 8;
                 else final = 9;
 
-                if(tamanhoPermitido - Math.Abs(final - inicial) != 0)
+                if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                 {
                     return false;
                 } 
             }
-
             return true;
-
-
         }
 
         public static string[,] ColocaNoMapa(string[,] posicoesPlayer, string[] comecoEfim )
