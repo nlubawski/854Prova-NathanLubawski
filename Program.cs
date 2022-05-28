@@ -149,11 +149,8 @@ namespace batalha_naval
                         comecoEfim[0] = $"{coordenadas[0]}{coordenadas[1]}";
                         comecoEfim[1] = coordenadas.Substring(2); 
                         validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
-                        Console.WriteLine($"valida entrada {validaEntrada.Item1}");
-                        ConstroiMapa(validaEntrada.Item2);
                     }                    
                 }
-
                 if(coordenadas.Length == 6)
                 {
                     if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaEntrada.Item1 = false;
@@ -166,7 +163,6 @@ namespace batalha_naval
                         validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
                     }
                 }
-
                 if(coordenadas.Length == 5)
                 {   
                     Console.WriteLine("aqui no tam 5");
@@ -215,17 +211,13 @@ namespace batalha_naval
             if(escolha == "NT") tamanhoPermitido = 4;
             if(escolha == "DS") tamanhoPermitido = 3;
             if(escolha == "SB") tamanhoPermitido = 2;
-            Console.WriteLine($"tamanho permitido entro do CASO 5 {tamanhoPermitido}");
             int tamanhoDaEntrada = comecoEfim[0].Length + comecoEfim[1].Length;
             if(tamanhoDaEntrada == 4)
             {
                 if(comecoEfim[0][0] == comecoEfim[1][0])
                 {   
-                    Console.WriteLine($"prime {comecoEfim[0][1]}, segundo {comecoEfim[1][1]} e");
-                    Console.WriteLine($"prime {Math.Abs(comecoEfim[0][1] - comecoEfim[1][1])} ");
                     if(tamanhoPermitido - (Math.Abs(comecoEfim[0][1] - comecoEfim[1][1]) + 1) != 0)
                     {
-                        Console.WriteLine("dentro do  lugar que quero");
                         return (false, posicoesPlayer);
                     }
                     int indice0 = -1;
@@ -239,7 +231,7 @@ namespace batalha_naval
                     else if(comecoEfim[0][0] == 'H') indice0 = 7;
                     else if(comecoEfim[0][0] == 'I') indice0 = 8;
                     else                             indice0 = 9;
-                    
+
                     int indice1 = Convert.ToInt32(char.ToString(comecoEfim[0][1])) - 1;
                     int indice2 = Convert.ToInt32(char.ToString(comecoEfim[1][1])) - 1;
                     int maior = indice2;
@@ -250,19 +242,11 @@ namespace batalha_naval
                         menor = indice2;
                     }
                     bool validaPorNoMapa = true;
-                    // posicoesPlayer[7,2] = "X";
-                    // Console.WriteLine($"vendo a matriz:{posicoesPlayer[7,2]}!!!");
                     for(int i = menor; i <= maior; i++)
                     {
                         if(posicoesPlayer[indice0,i] == "X")
                         {
-                            Console.WriteLine("conflito");
                             validaPorNoMapa = false;
-                        }
-                        else
-                        {
-                            Console.WriteLine("SEM conflito");
-                            
                         }
                     }
                     if(validaPorNoMapa)
@@ -270,18 +254,11 @@ namespace batalha_naval
                         for(int i = menor; i <= maior; i++)
                         {
                             posicoesPlayer[indice0,i] = "A";
-                            Console.WriteLine("TAMO AI");
                         }
+                        return (true, posicoesPlayer);  
                     }
-
-                    for(int i = menor; i <= maior; i++)
-                        {
-                            Console.WriteLine(posicoesPlayer[indice0,i]);
-                        }
-                
-                    return (true, posicoesPlayer);    
                 }
-                else
+                else if(comecoEfim[0][1] == comecoEfim[1][1])
                 {
                     int inicial;
                     if(comecoEfim[0][0] == 'A') inicial = 0;
@@ -307,14 +284,40 @@ namespace batalha_naval
                     else if(comecoEfim[1][0] == 'I') final = 8;
                     else final = 9;
 
-                    Console.WriteLine($"teste bool {tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0}");
-                    Console.WriteLine($"teste tamanho {tamanhoPermitido}");
-                    Console.WriteLine($"teste math abs +1 :{(Math.Abs(final - inicial) + 1)}");
                     if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                     {
                         return (false, posicoesPlayer);
                     } 
-                    return (true, posicoesPlayer); 
+                    
+                    int indice0 = Convert.ToInt32(char.ToString(comecoEfim[0][1]));
+                    int indice1 = inicial;
+                    int indice2 = final;
+                    int maior = indice2;
+                    int menor = indice1;
+
+                    if(indice1 > maior)
+                    {
+                        maior = indice1;
+                        menor = indice2;
+                    }
+                    bool validaPorNoMapa = true;
+                    for(int i = menor; i <= maior; i++)
+                    {
+                        if(posicoesPlayer[i,indice0] == "X")
+                        {
+                            Console.WriteLine("conflito");
+                            validaPorNoMapa = false;
+                        }
+                    }
+                    if(validaPorNoMapa)
+                    {
+                        for(int i = menor; i <= maior; i++)
+                        {
+                            posicoesPlayer[indice0,i] = "A";
+                        }
+                        return (true, posicoesPlayer); 
+                    }
+                    
                 }
             }
             if(tamanhoDaEntrada == 5)
@@ -456,18 +459,42 @@ namespace batalha_naval
                     else if(comecoEfim[1][0] == 'I') final = 8;
                                                 else final = 9;
 
-                    Console.WriteLine($"expressao {tamanhoPermitido - (inicial - final + 1) != 0}");
-                    Console.WriteLine($"tama permi {tamanhoPermitido}");
-                    Console.WriteLine($"incial {inicial}");
-                    Console.WriteLine($"fianl {final}");
-
-
                     if(tamanhoPermitido - (Math.Abs(inicial - final) + 1) != 0)
                     {
-                        Console.WriteLine("dentro do  lugar que quero no 3 por 3");
                         return (false, posicoesPlayer);
                     }    
-                    return (true, posicoesPlayer);
+
+                    int indice0 = 9;
+                    int indice1 = inicial;
+                    int indice2 = final;
+                    int maior = indice2;
+                    int menor = indice1;
+
+                    Console.WriteLine($"ESTOY AQUI");
+                    Console.WriteLine($"indice 0{indice0} maior{maior} menor {menor} indice1{indice1} indice2{indice2}");
+
+                    if(indice1 > maior)
+                    {
+                        maior = indice1;
+                        menor = indice2;
+                    }
+                    bool validaPorNoMapa = true;
+                    for(int i = menor; i <= maior; i++)
+                    {
+                        if(posicoesPlayer[i,indice0] == "X")
+                        {
+                            Console.WriteLine("conflito");
+                            validaPorNoMapa = false;
+                        }
+                    }
+                    if(validaPorNoMapa)
+                    {
+                        for(int i = menor; i <= maior; i++)
+                        {
+                            posicoesPlayer[indice0,i] = "A";
+                        }
+                        return (true, posicoesPlayer); 
+                    }
                 }
                 else
                 {
