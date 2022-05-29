@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace batalha_naval
 {
@@ -111,13 +112,15 @@ namespace batalha_naval
         { 
             (bool,string[,]) validaEntrada = (true, posicoesPlayer);
             string coordenadas;
+            bool controleEntrada = false;
             do
             {
                 Console.WriteLine("Qual a sua posição?");
                 coordenadas = Console.ReadLine();
+                controleEntrada = RegexEntrada(coordenadas);
 
-                //teste
-                //string entradaFiltro = @"A1A2 A1A3 A1A4 A1A5 A1A6 A1A6 A1A7 A1A8 A1A9 A1A10";
+                if(controleEntrada)
+                {
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
@@ -181,7 +184,9 @@ namespace batalha_naval
                         validaEntrada.Item1 = false;
                     }
                 }
-            }while(!validaEntrada.Item1);
+                }
+
+            }while(!validaEntrada.Item1 || !controleEntrada);
             return (listaQuantidadeFrota, posicoesPlayer);
         }
 
@@ -587,6 +592,14 @@ namespace batalha_naval
             Console.WriteLine("   |");
             Console.WriteLine($" J | {mapa[0, 0]}  {mapa[9, 1]}  {mapa[9, 2]}  {mapa[9, 3]}  {mapa[9, 4]}  {mapa[9, 5]}  {mapa[9, 6]}  {mapa[9, 7]}  {mapa[9, 8]}  {mapa[9, 9]}");
 
+        }
+
+        public static bool RegexEntrada(string coordenada)
+        {   
+            string padrao = @"^[A-J]{1}([0-9]{1}|[0-9]{2})[A-J]{1}([0-9]{1}|[0-9]{2}){1}$";
+            Console.WriteLine($"teste input regex {Regex.IsMatch(coordenada, padrao)}");            
+        
+            return Regex.IsMatch(coordenada, padrao);
         }
     }
 }
