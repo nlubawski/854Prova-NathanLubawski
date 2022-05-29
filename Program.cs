@@ -70,14 +70,19 @@ namespace batalha_naval
             Console.WriteLine("DS para Destroyers"); //tem 3 e ocupa 3 espacos
             Console.WriteLine("SB para Submarinos"); //tem 4 e ocupa 2 espacos
             escolha = Console.ReadLine();
-            validador = (escolha == "PS" || escolha == "NT" || escolha == "DS" || escolha == "SB");
-            if(validador)
+            validador = RegexEscolhaDaFrota(escolha);
+            Console.WriteLine("validador " + validador);
+            if(validador == true)
             {
                 if(escolha == "PS")
                 {
                     if(listaQuantidadeFrota[0] == 0)
                         Console.WriteLine("***Você já colocou seu Porta-Aviões***");
                         validador = false;
+                    }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
                     }
                 }
                 else if(escolha == "NT")
@@ -87,6 +92,10 @@ namespace batalha_naval
                         Console.WriteLine("***Você já colocou seus Navios-Tanque***");
                         validador = false;
                     }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
+                    }
                 }
                 else if(escolha == "DS")
                 {
@@ -94,6 +103,10 @@ namespace batalha_naval
                     {
                         Console.WriteLine("***Você já colocou seus Destroyers***");
                         validador = false;
+                    }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
                     }
                 }
                 else if(escolha == "SB")
@@ -103,14 +116,17 @@ namespace batalha_naval
                         Console.WriteLine("***Você já colocou seus Submarinos***");
                         validador = false;
                     }
-                }
-                posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
+                    }
+                }          
             }while(!validador);
             return (posicoes.Item1, posicoes.Item2);
         }
         public static (List<int>, string[,]) VerificaCoordenadas(string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota)
         { 
-            (bool,string[,]) validaEntrada = (true, posicoesPlayer);
+            (bool,string[,],List<int>) validaEntrada = (true, posicoesPlayer,listaQuantidadeFrota);
             string coordenadas;
             bool controleEntrada = false;
             do
@@ -118,83 +134,84 @@ namespace batalha_naval
                 Console.WriteLine("Qual a sua posição?");
                 coordenadas = Console.ReadLine();
                 controleEntrada = RegexEntrada(coordenadas);
-
+                Console.WriteLine($"controle de Entrada {controleEntrada}");
                 if(controleEntrada)
                 {
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
                 
-                if(coordenadas.Length == 4)
-                {
-                    if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[2])) validaEntrada.Item1 = false;
-                    if(!numeros.Contains(coordenadas[1]) || !numeros.Contains(coordenadas[3])) validaEntrada.Item1 = false;
+                    if(coordenadas.Length == 4)
+                    {
+                        if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[2])) validaEntrada.Item1 = false;
+                        if(!numeros.Contains(coordenadas[1]) || !numeros.Contains(coordenadas[3])) validaEntrada.Item1 = false;
 
-                    if(validaEntrada.Item1)
-                    {
-                        comecoEfim[0] = $"{coordenadas[0]}{coordenadas[1]}";
-                        comecoEfim[1] = coordenadas.Substring(2); 
-                        validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
-                    }
-                    else{
-                        break;
-                    }                 
-                }
-                if(coordenadas.Length == 6)
-                {
-                    if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaEntrada.Item1 = false;
-                    if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains($"{coordenadas[4]}{coordenadas[5]}")) validaEntrada.Item1 = false;
-                    if(validaEntrada.Item1)
-                    {
-                        Console.WriteLine("chhh");
-                        comecoEfim[0] = coordenadas.Substring(0,3);
-                        comecoEfim[1] = coordenadas.Substring(3);
-                        validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
-                    }
-                }
-                if(coordenadas.Length == 5)
-                {   
-                    if(letras.Contains(coordenadas[2]))
-                    {
-                        if(!letras.Contains(coordenadas[0])) validaEntrada.Item1 = false;
-                        if(!numeros.Contains(coordenadas[1]) || !numeros.Contains($"{coordenadas[3]}{coordenadas[4]}")) validaEntrada.Item1 = false;
                         if(validaEntrada.Item1)
                         {
-                            comecoEfim[0] = coordenadas.Substring(0,2);
-                            comecoEfim[1] = coordenadas.Substring(2);
-                            Console.WriteLine($"comeco e fim 0 {comecoEfim[0]}");
-                            Console.WriteLine($"comeco e fim 1 {comecoEfim[1]}");
-                            validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
-                            Console.WriteLine($"valida entrada {validaEntrada}");
+                            comecoEfim[0] = $"{coordenadas[0]}{coordenadas[1]}";
+                            comecoEfim[1] = coordenadas.Substring(2); 
+                            validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
                         }
+                        else{
+                            break;
+                        }                 
                     }
-                    else if(numeros.Contains(coordenadas[2]))
+                    if(coordenadas.Length == 6)
                     {
                         if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaEntrada.Item1 = false;
-                        if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains(coordenadas[4])) validaEntrada.Item1 = false;
+                        if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains($"{coordenadas[4]}{coordenadas[5]}")) validaEntrada.Item1 = false;
                         if(validaEntrada.Item1)
                         {
+                            Console.WriteLine("chhh");
                             comecoEfim[0] = coordenadas.Substring(0,3);
                             comecoEfim[1] = coordenadas.Substring(3);
-                            validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
+                            validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
                         }
                     }
-                    else
-                    { 
-                        validaEntrada.Item1 = false;
+                    if(coordenadas.Length == 5)
+                    {   
+                        if(letras.Contains(coordenadas[2]))
+                        {
+                            if(!letras.Contains(coordenadas[0])) validaEntrada.Item1 = false;
+                            if(!numeros.Contains(coordenadas[1]) || !numeros.Contains($"{coordenadas[3]}{coordenadas[4]}")) validaEntrada.Item1 = false;
+                            if(validaEntrada.Item1)
+                            {
+                                comecoEfim[0] = coordenadas.Substring(0,2);
+                                comecoEfim[1] = coordenadas.Substring(2);
+                                Console.WriteLine($"comeco e fim 0 {comecoEfim[0]}");
+                                Console.WriteLine($"comeco e fim 1 {comecoEfim[1]}");
+                                validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
+                                Console.WriteLine($"valida entrada {validaEntrada}");
+                            }
+                        }
+                        else if(numeros.Contains(coordenadas[2]))
+                        {
+                            if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaEntrada.Item1 = false;
+                            if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains(coordenadas[4])) validaEntrada.Item1 = false;
+                            if(validaEntrada.Item1)
+                            {
+                                comecoEfim[0] = coordenadas.Substring(0,3);
+                                comecoEfim[1] = coordenadas.Substring(3);
+                                validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
+                            }
+                        }
+                        else
+                        { 
+                            validaEntrada.Item1 = false;
+                        }
                     }
                 }
-                }
 
+                
             }while(!validaEntrada.Item1 || !controleEntrada);
-            return (listaQuantidadeFrota, posicoesPlayer);
+            return (validaEntrada.Item3, posicoesPlayer);
         }
 
-        public static (bool,string[,]) VerificaTamanho(string[] comecoEfim, string escolha, string[,] posicoesPlayer)
+        public static (bool,string[,],List<int>) VerificaTamanho(string[] comecoEfim, string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota )
         {
             if(comecoEfim[0][0] != comecoEfim[1][0] && comecoEfim[0][1] != comecoEfim[1][1])
             {
-                return (false, posicoesPlayer);
+                return (false, posicoesPlayer, listaQuantidadeFrota);
             }
             int tamanhoPermitido = 0;
             if(escolha == "PS") tamanhoPermitido = 5;
@@ -208,7 +225,7 @@ namespace batalha_naval
                 {   
                     if(tamanhoPermitido - (Math.Abs(comecoEfim[0][1] - comecoEfim[1][1]) + 1) != 0)
                     {
-                        return (false, posicoesPlayer);
+                        return (false, posicoesPlayer, listaQuantidadeFrota);
                     }
                     int indice0 = -1;
                     if(comecoEfim[0][0] == 'A')      indice0 = 0;
@@ -245,7 +262,24 @@ namespace batalha_naval
                         {
                             posicoesPlayer[indice0,i] = "A";
                         }
-                        return (true, posicoesPlayer);  
+
+                        if(escolha == "PS")
+                        {
+                            listaQuantidadeFrota[0] -= 1;
+                        }
+                        else if(escolha == "NT")
+                        {
+                            listaQuantidadeFrota[1] -= 1;
+                        }
+                        else if(escolha == "DS")
+                        {
+                            listaQuantidadeFrota[2] -= 1;
+                        }
+                        else
+                        {
+                            listaQuantidadeFrota[3] -= 1;
+                        }
+                        return (true, posicoesPlayer, listaQuantidadeFrota);  
                     }
                 }
                 else if(comecoEfim[0][1] == comecoEfim[1][1])
@@ -276,7 +310,7 @@ namespace batalha_naval
 
                     if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                     {
-                        return (false, posicoesPlayer);
+                        return (false, posicoesPlayer, listaQuantidadeFrota);
                     } 
                     
                     int indice0 = Convert.ToInt32(char.ToString(comecoEfim[0][1]));
@@ -305,7 +339,7 @@ namespace batalha_naval
                         {
                             posicoesPlayer[indice0,i] = "A";
                         }
-                        return (true, posicoesPlayer); 
+                        return (true, posicoesPlayer, listaQuantidadeFrota); 
                     }
                     
                 }
@@ -322,7 +356,7 @@ namespace batalha_naval
                         
                         if(tamanhoPermitido - (Math.Abs(primeiro - segundo )+ 1) != 0)
                         {
-                            return (false, posicoesPlayer);
+                            return (false, posicoesPlayer, listaQuantidadeFrota);
                         }
                         int indice0 = -1;
                         if(comecoEfim[0][0] == 'A')      indice0 = 0;
@@ -358,7 +392,7 @@ namespace batalha_naval
                             {
                                 posicoesPlayer[indice0,i] = "A";
                             }
-                            return (true, posicoesPlayer);  
+                            return (true, posicoesPlayer, listaQuantidadeFrota);  
                         }   
                     }
                     else
@@ -393,9 +427,9 @@ namespace batalha_naval
                         Console.WriteLine($"teste math abs +1 :{(Math.Abs(final - inicial) + 1)}");
                         if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                         {
-                            return (false, posicoesPlayer);
+                            return (false, posicoesPlayer, listaQuantidadeFrota);
                         }
-                        return (true, posicoesPlayer);
+                        return (true, posicoesPlayer, listaQuantidadeFrota);
                     }
                 }
                 if(comecoEfim[0].Length == 3)
@@ -410,7 +444,7 @@ namespace batalha_naval
 
                         if(tamanhoPermitido - (Math.Abs(primeiro - segundo) + 1) != 0)
                         {
-                            return (false, posicoesPlayer);
+                            return (false, posicoesPlayer, listaQuantidadeFrota);
                         } 
                         
 
@@ -449,7 +483,7 @@ namespace batalha_naval
                                 posicoesPlayer[indice0,i] = "A";
                             }
                             Console.WriteLine("tchiriri thcarara");
-                            return (true, posicoesPlayer);  
+                            return (true, posicoesPlayer, listaQuantidadeFrota);  
                         }    
                     }
                     else
@@ -483,9 +517,9 @@ namespace batalha_naval
                         Console.WriteLine($"teste math abs +1 :{(Math.Abs(final - inicial) + 1)}");
                         if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                         {
-                            return (false, posicoesPlayer);
+                            return (false, posicoesPlayer, listaQuantidadeFrota);
                         }
-                        return (true, posicoesPlayer);
+                        return (true, posicoesPlayer, listaQuantidadeFrota);
                     }
                 }
             }
@@ -521,7 +555,7 @@ namespace batalha_naval
 
                     if(tamanhoPermitido - (Math.Abs(inicial - final) + 1) != 0)
                     {
-                        return (false, posicoesPlayer);
+                        return (false, posicoesPlayer, listaQuantidadeFrota);
                     }    
 
                     int indice0 = 9;
@@ -550,15 +584,15 @@ namespace batalha_naval
                         {
                             posicoesPlayer[indice0,i] = "A";
                         }
-                        return (true, posicoesPlayer); 
+                        return (true, posicoesPlayer, listaQuantidadeFrota); 
                     }
                 }
                 else
                 {
-                    return (false, posicoesPlayer);
+                    return (false, posicoesPlayer, listaQuantidadeFrota);
                 }
             }  
-            return (false, posicoesPlayer);     
+            return (false, posicoesPlayer, listaQuantidadeFrota);     
         }
 
         public static string[,] ColocaNoMapa(string[,] posicoesPlayer, string[] comecoEfim )
@@ -600,6 +634,14 @@ namespace batalha_naval
             Console.WriteLine($"teste input regex {Regex.IsMatch(coordenada, padrao)}");            
         
             return Regex.IsMatch(coordenada, padrao);
+        }
+
+        public static bool RegexEscolhaDaFrota(string escolha)
+        {   
+            string padrao = @"^([PS]|[NT]|[DS]|[SB])$";
+            Console.WriteLine($"teste input regex {Regex.IsMatch(escolha, padrao)}");            
+        
+            return Regex.IsMatch(escolha, padrao);
         }
     }
 }
