@@ -40,27 +40,28 @@ namespace batalha_naval
         }
         public static string[,] PosicoesNoMapa(string player)
         {
-            var lista = new List<int>{1,2,3,4}; //portaAvioes,navioTanque,destroyers,submarinos = 4;
+            var listaQuantidadeFrota = new List<int>{1,2,3,4};
             var posicoesPlayer = new string[10,10];
-            var resultado = new Tuple<List<int>, string[,]>(lista, posicoesPlayer);
-            while(lista.Sum() > 0)
+            var resultado = (listaQuantidadeFrota, posicoesPlayer);
+            while(listaQuantidadeFrota.Sum() > 0)
             {
-            resultado = TipoDaEmbarcacao(lista, posicoesPlayer, player);
-            lista = resultado.Item1;
+            Console.WriteLine($"soma da lista da frota = {listaQuantidadeFrota.Sum()}");
+            resultado = TipoDaEmbarcacao(listaQuantidadeFrota, posicoesPlayer, player);
+            listaQuantidadeFrota = resultado.Item1;
             posicoesPlayer = resultado.Item2;
             }
             return posicoesPlayer;
         }         
 
-        public static Tuple<List<int>, string[,]> TipoDaEmbarcacao(List<int> lista, string[,] posicoesPlayer, string player)
+        public static (List<int>, string[,]) TipoDaEmbarcacao(List<int> listaQuantidadeFrota, string[,] posicoesPlayer, string player)
         {
             bool validador = false;
             string escolha;
-            string[,] posicoes = posicoesPlayer;
+            var posicoes = (listaQuantidadeFrota, posicoesPlayer);
             do
             {
             Console.WriteLine($"Bem vindo {player}!!!");
-            Console.WriteLine(@$"Você tem disponível {lista[0]} Porta Aviões, {lista[1]} Navio Tanques, {lista[2]} Destroyers, {lista[3]} Submarinos");
+            Console.WriteLine(@$"Você tem disponível {listaQuantidadeFrota[0]} Porta Aviões, {listaQuantidadeFrota[1]} Navio Tanques, {listaQuantidadeFrota[2]} Destroyers, {listaQuantidadeFrota[3]} Submarinos");
             Console.WriteLine("");
             Console.WriteLine("Qual o tipo de embarcação? Digite");
             Console.WriteLine("PS para Porta-Aviões"); //tem 1 e ocupa 5 espacos
@@ -73,68 +74,50 @@ namespace batalha_naval
             {
                 if(escolha == "PS")
                 {
-                    if(lista[0] > 0)
-                    {
-                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer);
-                        lista[0] -=1;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Você já colocou seu Porta-Aviões");
+                    if(listaQuantidadeFrota[0] == 0)
+                        Console.WriteLine("***Você já colocou seu Porta-Aviões***");
                         validador = false;
                     }
                 }
                 else if(escolha == "NT")
                 {
-                    if(lista[1] > 0)
-                    {                        
-                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer);
-                        lista[1] -=1;
-                    }
-                    else
+                    if(listaQuantidadeFrota[1] == 0)
                     {
-                        Console.WriteLine("Você já colocou seus Navios-Tanque");
+                        Console.WriteLine("***Você já colocou seus Navios-Tanque***");
                         validador = false;
                     }
                 }
                 else if(escolha == "DS")
                 {
-                    if(lista[2] > 0)
+                    if(listaQuantidadeFrota[2] == 0)
                     {
-                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer);
-                        lista[2] -=1;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Você já colocou seus Destroyers");
+                        Console.WriteLine("***Você já colocou seus Destroyers***");
                         validador = false;
                     }
                 }
                 else if(escolha == "SB")
                 {
-                    if(lista[3] > 0)
+                    if(listaQuantidadeFrota[3] == 0)
                     {
-                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer);
-                        lista[3] -=1;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Você já colocou seus Submarinos");
+                        Console.WriteLine("***Você já colocou seus Submarinos***");
                         validador = false;
                     }
                 }
-            }
+                posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
             }while(!validador);
-            var retornar = new Tuple<List<int>, string[,]>(lista, posicoes);
-            return retornar;
+            return (posicoes.Item1, posicoes.Item2);
         }
-        public static string[,] VerificaCoordenadas(string escolha, string[,] posicoesPlayer)
+        public static (List<int>, string[,]) VerificaCoordenadas(string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota)
         { 
             (bool,string[,]) validaEntrada = (true, posicoesPlayer);
+            string coordenadas;
             do
             {
                 Console.WriteLine("Qual a sua posição?");
-                string coordenadas = Console.ReadLine();
+                coordenadas = Console.ReadLine();
+
+                //teste
+                //string entradaFiltro = @"A1A2 A1A3 A1A4 A1A5 A1A6 A1A6 A1A7 A1A8 A1A9 A1A10";
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
@@ -149,7 +132,10 @@ namespace batalha_naval
                         comecoEfim[0] = $"{coordenadas[0]}{coordenadas[1]}";
                         comecoEfim[1] = coordenadas.Substring(2); 
                         validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer);
-                    }                    
+                    }
+                    else{
+                        break;
+                    }                 
                 }
                 if(coordenadas.Length == 6)
                 {
@@ -165,7 +151,6 @@ namespace batalha_naval
                 }
                 if(coordenadas.Length == 5)
                 {   
-                    Console.WriteLine("aqui no tam 5");
                     if(letras.Contains(coordenadas[2]))
                     {
                         if(!letras.Contains(coordenadas[0])) validaEntrada.Item1 = false;
@@ -197,7 +182,7 @@ namespace batalha_naval
                     }
                 }
             }while(!validaEntrada.Item1);
-            return posicoesPlayer;
+            return (listaQuantidadeFrota, posicoesPlayer);
         }
 
         public static (bool,string[,]) VerificaTamanho(string[] comecoEfim, string escolha, string[,] posicoesPlayer)
@@ -244,7 +229,7 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        if(posicoesPlayer[indice0,i] == "X")
+                        if(posicoesPlayer[indice0,i] == "A")
                         {
                             validaPorNoMapa = false;
                         }
@@ -303,7 +288,7 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        if(posicoesPlayer[i,indice0] == "X")
+                        if(posicoesPlayer[i,indice0] == "A")
                         {
                             Console.WriteLine("conflito");
                             validaPorNoMapa = false;
@@ -322,6 +307,7 @@ namespace batalha_naval
             }
             if(tamanhoDaEntrada == 5)
             {
+                Console.WriteLine($"tama {comecoEfim[0].Length}");
                 if(comecoEfim[0].Length == 2)
                 {
                     if(comecoEfim[0][0] == comecoEfim[1][0])
@@ -329,15 +315,46 @@ namespace batalha_naval
                         int primeiro = Convert.ToInt32(char.ToString(comecoEfim[0][1]));
                         int segundo = Convert.ToInt32(char.ToString(comecoEfim[1][1]) + char.ToString(comecoEfim[1][2]));
                         
-                        Console.WriteLine($"primeiro {primeiro} sgudo {segundo}");
-                        Console.WriteLine($"validacao {tamanhoPermitido - (Math.Abs(primeiro - segundo)+ 1)}");
-
                         if(tamanhoPermitido - (Math.Abs(primeiro - segundo )+ 1) != 0)
                         {
-                            Console.WriteLine("dentro do  lugar que quero");
                             return (false, posicoesPlayer);
                         }
-                        return (true, posicoesPlayer);   
+                        int indice0 = -1;
+                        if(comecoEfim[0][0] == 'A')      indice0 = 0;
+                        else if(comecoEfim[0][0] == 'B') indice0 = 1;
+                        else if(comecoEfim[0][0] == 'C') indice0 = 2;
+                        else if(comecoEfim[0][0] == 'D') indice0 = 3;
+                        else if(comecoEfim[0][0] == 'E') indice0 = 4;
+                        else if(comecoEfim[0][0] == 'F') indice0 = 5;
+                        else if(comecoEfim[0][0] == 'G') indice0 = 6;
+                        else if(comecoEfim[0][0] == 'H') indice0 = 7;
+                        else if(comecoEfim[0][0] == 'I') indice0 = 8;
+                        else                             indice0 = 9;
+                        int indice1 = primeiro - 1;
+                        int indice2 = segundo - 1;
+                        int maior = indice2;
+                        int menor = indice1;
+                        if(indice1 > maior)
+                        {
+                            maior = indice1;
+                            menor = indice2;
+                        }
+                        bool validaPorNoMapa = true;
+                        for(int i = menor; i <= maior; i++)
+                        {
+                            if(posicoesPlayer[indice0,i] == "A")
+                            {
+                                validaPorNoMapa = false;
+                            }
+                        }
+                        if(validaPorNoMapa)
+                        {
+                            for(int i = menor; i <= maior; i++)
+                            {
+                                posicoesPlayer[indice0,i] = "A";
+                            }
+                            return (true, posicoesPlayer);  
+                        }   
                     }
                     else
                     {
@@ -390,7 +407,45 @@ namespace batalha_naval
                         {
                             return (false, posicoesPlayer);
                         } 
-                        return (true, posicoesPlayer);    
+                        
+
+                        int indice0 = -1;
+                        if(comecoEfim[0][0] == 'A')      indice0 = 0;
+                        else if(comecoEfim[0][0] == 'B') indice0 = 1;
+                        else if(comecoEfim[0][0] == 'C') indice0 = 2;
+                        else if(comecoEfim[0][0] == 'D') indice0 = 3;
+                        else if(comecoEfim[0][0] == 'E') indice0 = 4;
+                        else if(comecoEfim[0][0] == 'F') indice0 = 5;
+                        else if(comecoEfim[0][0] == 'G') indice0 = 6;
+                        else if(comecoEfim[0][0] == 'H') indice0 = 7;
+                        else if(comecoEfim[0][0] == 'I') indice0 = 8;
+                        else                             indice0 = 9;
+                        int indice1 = primeiro - 1;
+                        int indice2 = segundo - 1;
+                        int maior = indice2;
+                        int menor = indice1;
+                        if(indice1 > maior)
+                        {
+                            maior = indice1;
+                            menor = indice2;
+                        }
+                        bool validaPorNoMapa = true;
+                        for(int i = menor; i <= maior; i++)
+                        {
+                            if(posicoesPlayer[indice0,i] == "A")
+                            {
+                                validaPorNoMapa = false;
+                            }
+                        }
+                        if(validaPorNoMapa)
+                        {
+                            for(int i = menor; i <= maior; i++)
+                            {
+                                posicoesPlayer[indice0,i] = "A";
+                            }
+                            Console.WriteLine("tchiriri thcarara");
+                            return (true, posicoesPlayer);  
+                        }    
                     }
                     else
                     {
@@ -470,9 +525,6 @@ namespace batalha_naval
                     int maior = indice2;
                     int menor = indice1;
 
-                    Console.WriteLine($"ESTOY AQUI");
-                    Console.WriteLine($"indice 0{indice0} maior{maior} menor {menor} indice1{indice1} indice2{indice2}");
-
                     if(indice1 > maior)
                     {
                         maior = indice1;
@@ -481,7 +533,7 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        if(posicoesPlayer[i,indice0] == "X")
+                        if(posicoesPlayer[i,indice0] == "A")
                         {
                             Console.WriteLine("conflito");
                             validaPorNoMapa = false;
@@ -512,8 +564,6 @@ namespace batalha_naval
         }
 
         public static void ConstroiMapa(string[,] mapa){
-            // //string[,] mapa = ;
-            // int[,] mapa = new int[10, 10];
 
             Console.WriteLine("   |" + " 1 " + " 2 " + " 3 " + " 4 " + " 5 " + " 6 " + " 7 " + " 8 " + " 9 " + " 10 ");
             Console.WriteLine("------------------------------------");
@@ -538,51 +588,5 @@ namespace batalha_naval
             Console.WriteLine($" J | {mapa[0, 0]}  {mapa[9, 1]}  {mapa[9, 2]}  {mapa[9, 3]}  {mapa[9, 4]}  {mapa[9, 5]}  {mapa[9, 6]}  {mapa[9, 7]}  {mapa[9, 8]}  {mapa[9, 9]}");
 
         }
-
-        // public static bool VerificaDisponibilidadeNoMapa(string palavra, int[,] mapa)
-        // {
-        //     string letras = "ABCDEFGHIJ";
-        //     string numeros = "1 2 3 4 5 6 7 8 9 10";
-            
-        //     if(palavra.Length == 4)
-        //     {
-        //         string comeco = palavra.Substring(0,2);
-        //         string fim = palavra.Substring(2,4);
-
-        //         if(comeco[0] == fim[0] )
-        //         {
-                    
-        //         }
-
-        //         if(comeco[1] == fim[1] )
-        //         {
-
-        //         }
-
-        //         return false;
-        //     }
-
-        //     if(palavra.Length == 6)
-        //     {
-        //         //corta em duas e compara
-        //     }
-
-        //     if(palavra.Length == 5)
-        //     {   
-
-        //         //verifica o caso em dois e corta de acordo
-
-        //         if(letras.Contains(palavra[2]))
-        //         {
-        //             if(!letras.Contains(palavra[0])) return false;
-        //             if(!numeros.Contains(palavra[1]) || !numeros.Contains($"{palavra[3]}{palavra[4]}")) return false;
-        //         }
-        //         else(numeros.Contains(palavra[2]))
-        //         {
-        //             if(!letras.Contains(palavra[0]) || !letras.Contains(palavra[3])) return false;
-        //             if(!numeros.Contains($"{palavra[1]}{palavra[2]}") || !numeros.Contains(palavra[4])) return false;
-        //         }
-        //     }
-        // }
     }
 }
