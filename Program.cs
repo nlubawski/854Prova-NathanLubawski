@@ -38,7 +38,9 @@ namespace batalha_naval
             var posicoesPlayer1 = PosicoesNoMapa(player1);
             var posicoesPlayer2 = PosicoesNoMapa(player2);
             ConstroiMapa(posicoesPlayer1);
-            ConstroiMapa(posicoesPlayer1);
+            ConstroiMapa(posicoesPlayer2);
+
+            Iniciar(posicoesPlayer1,posicoesPlayer2);
         }
         public static string[,] PosicoesNoMapa(string player)
         {
@@ -635,7 +637,6 @@ namespace batalha_naval
             Console.WriteLine($" J | {mapa[0, 0]}  {mapa[9, 1]}  {mapa[9, 2]}  {mapa[9, 3]}  {mapa[9, 4]}  {mapa[9, 5]}  {mapa[9, 6]}  {mapa[9, 7]}  {mapa[9, 8]}  {mapa[9, 9]}");
 
         }
-
         public static bool RegexEntrada(string coordenada)
         {   
             string padrao = @"^[A-J]{1}([0-9]{1}|[0-9]{2})[A-J]{1}([0-9]{1}|[0-9]{2}){1}$";
@@ -643,13 +644,50 @@ namespace batalha_naval
         
             return Regex.IsMatch(coordenada, padrao);
         }
-
         public static bool RegexEscolhaDaFrota(string escolha)
         {   
             string padrao = @"^([P][S]|[N][T]|[D][S]|[S][B])";
             Console.WriteLine($"input regex frota {Regex.IsMatch(escolha, padrao)}");            
         
             return Regex.IsMatch(escolha, padrao);
+        }
+        public static void Iniciar(string[,] player1, string[,] player2)
+        {
+            Console.WriteLine("vamos ao jogo");
+            bool vencedor = false;
+            string[,] tabuleiroParaPlayer1 = new string[10,10];
+            string[,] tabuleiroParaPlayer2 = new string[10,10];
+            string jogadaPlayer1; 
+            int indice1;
+            int indice2;
+            while(!vencedor)
+            {
+                ConstroiMapa(tabuleiroParaPlayer1);
+                Console.WriteLine($"Sua vez de jogar jogador1");
+                jogadaPlayer1 = Console.ReadLine();
+                //validar a jogada e pegar os indices
+                indice1 = 0;
+                indice2 = 1;
+                // if(player2[indice1,indice2] == "A")
+                // {
+                //     tabuleiroParaPlayer1[indice1][indice2] = "A";
+                // }
+                // else
+                // {
+                //     tabuleiroParaPlayer1[indice1][indice2] = "X";
+                // }
+                //verifica se ganhou igualar matriz funciona?
+                vencedor = tabuleiroParaPlayer1.Equals(player2);
+                Console.WriteLine($"vencedor {vencedor}");
+                if(vencedor)
+                {
+                    Console.WriteLine($"Parabéns {player1}! Você Ganhou!!!"); 
+                }
+                
+                vencedor = true; // teste
+            }
+            
+
         }
     }
 }
