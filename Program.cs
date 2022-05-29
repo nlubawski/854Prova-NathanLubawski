@@ -36,15 +36,15 @@ namespace batalha_naval
             var player2 = Console.ReadLine();
             Console.Clear();
             var posicoesPlayer1 = PosicoesNoMapa(player1);
-            //var posicoesPlayer2 = PosicoesNoMapa(player2);
+            var posicoesPlayer2 = PosicoesNoMapa(player2);
             ConstroiMapa(posicoesPlayer1);
-            //ConstroiMapa(posicoesPlayer2);
+            ConstroiMapa(posicoesPlayer2);
 
             //Iniciar(posicoesPlayer1,posicoesPlayer2);
         }
         public static string[,] PosicoesNoMapa(string player)
         {
-            var listaQuantidadeFrota = new List<int>{1,0,0,0};
+            var listaQuantidadeFrota = new List<int>{1,0,0,2};
             var posicoesPlayer = new string[10,10];
             for(var i = 0; i < 10; i++)
             {
@@ -56,7 +56,6 @@ namespace batalha_naval
             var resultado = (listaQuantidadeFrota, posicoesPlayer);
             while(listaQuantidadeFrota.Sum() > 0)
             {
-            Console.WriteLine($"soma da lista da frota = {listaQuantidadeFrota.Sum()}");
             resultado = TipoDaEmbarcacao(listaQuantidadeFrota, posicoesPlayer, player);
             listaQuantidadeFrota = resultado.Item1;
             posicoesPlayer = resultado.Item2;
@@ -75,20 +74,17 @@ namespace batalha_naval
             Console.WriteLine(@$"Você tem disponível {listaQuantidadeFrota[0]} Porta Aviões, {listaQuantidadeFrota[1]} Navio Tanques, {listaQuantidadeFrota[2]} Destroyers, {listaQuantidadeFrota[3]} Submarinos");
             Console.WriteLine("");
             Console.WriteLine("Qual o tipo de embarcação? Digite");
-            Console.WriteLine("PS para Porta-Aviões"); //tem 1 e ocupa 5 espacos
-            Console.WriteLine("NT para Navio-Tanque"); //tem 2 e ocupa 4 espacos
-            Console.WriteLine("DS para Destroyers"); //tem 3 e ocupa 3 espacos
-            Console.WriteLine("SB para Submarinos"); //tem 4 e ocupa 2 espacos
+            Console.WriteLine("PS para Porta-Aviões (ocupa 5 espacos)"); 
+            Console.WriteLine("NT para Navio-Tanque (ocupa 4 espacos)");
+            Console.WriteLine("DS para Destroyers (ocupa 3 espacos)");
+            Console.WriteLine("SB para Submarinos (ocupa ocupa 2 espacos)");
             escolha = Console.ReadLine();
             validador = RegexEscolhaDaFrota(escolha);
-            Console.WriteLine("validador " + validador);
 
             if(validador == true)
             {
-                Console.WriteLine("to aqui dentro");
                 if(escolha == "PS")
                 {
-                    Console.WriteLine($" listaQua..frota {listaQuantidadeFrota[0]}");
                     if(listaQuantidadeFrota[0] == 0)
                     {
                         Console.WriteLine("***Você já colocou seu Porta-Aviões***");
@@ -96,7 +92,6 @@ namespace batalha_naval
                     }
                     else
                     {
-                        Console.WriteLine("aqui no else");
                         posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
                     }
                 }
@@ -151,7 +146,6 @@ namespace batalha_naval
                 Console.WriteLine("Qual a sua posição?");
                 coordenadas = Console.ReadLine();
                 controleEntrada = RegexEntrada(coordenadas);
-                Console.WriteLine($"controle de Entrada {controleEntrada}");
                 if(controleEntrada)
                 {
                 string letras = "ABCDEFGHIJ";
@@ -179,7 +173,6 @@ namespace batalha_naval
                         if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains($"{coordenadas[4]}{coordenadas[5]}")) validaEntrada.Item1 = false;
                         if(validaEntrada.Item1)
                         {
-                            Console.WriteLine("chhh");
                             comecoEfim[0] = coordenadas.Substring(0,3);
                             comecoEfim[1] = coordenadas.Substring(3);
                             validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
@@ -195,10 +188,7 @@ namespace batalha_naval
                             {
                                 comecoEfim[0] = coordenadas.Substring(0,2);
                                 comecoEfim[1] = coordenadas.Substring(2);
-                                Console.WriteLine($"comeco e fim 0 {comecoEfim[0]}");
-                                Console.WriteLine($"comeco e fim 1 {comecoEfim[1]}");
                                 validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
-                                Console.WriteLine($"valida entrada AQIO {validaEntrada}");
                             }
                         }
                         else if(numeros.Contains(coordenadas[2]))
@@ -238,10 +228,8 @@ namespace batalha_naval
             int tamanhoDaEntrada = comecoEfim[0].Length + comecoEfim[1].Length;
             if(tamanhoDaEntrada == 4)
             { 
-                Console.WriteLine("veremos os casos");
                 if(comecoEfim[0][0] == comecoEfim[1][0])
                 {   
-                    Console.WriteLine("to no caso 1");
                     if(tamanhoPermitido - (Math.Abs(comecoEfim[0][1] - comecoEfim[1][1]) + 1) != 0)
                     {
                         return (false, posicoesPlayer, listaQuantidadeFrota);
@@ -303,7 +291,6 @@ namespace batalha_naval
                 }
                 else if(comecoEfim[0][1] == comecoEfim[1][1])
                 {
-                    Console.WriteLine("TO no CASO 2");
                     int inicial;
                     if(comecoEfim[0][0] == 'A') inicial = 0;
                     else if(comecoEfim[0][0] == 'B') inicial = 1;
@@ -338,10 +325,6 @@ namespace batalha_naval
                     int indice2 = final;
                     int maior = indice2;
                     int menor = indice1;
-
-                    Console.WriteLine($"indice0 = {indice0}, indice1 = {indice1}");
-                    Console.WriteLine($"indice2 = {indice2}, maior = {maior}, menor = {menor}");
-
                     if(indice1 > maior)
                     {
                         maior = indice1;
@@ -350,7 +333,6 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        Console.WriteLine($"{i}, {indice0}");
                         if(posicoesPlayer[i,indice0] == "A")
                         {
                             Console.WriteLine("conflito");
@@ -386,12 +368,10 @@ namespace batalha_naval
             }
             if(tamanhoDaEntrada == 5)
             {
-                Console.WriteLine($"tama {comecoEfim[0].Length}");
                 if(comecoEfim[0].Length == 2)
                 {
                     if(comecoEfim[0][0] == comecoEfim[1][0])
                     {   
-                        Console.WriteLine("AQUUUU");
                         int primeiro = Convert.ToInt32(char.ToString(comecoEfim[0][1]));
                         int segundo = Convert.ToInt32(char.ToString(comecoEfim[1][1]) + char.ToString(comecoEfim[1][2]));
                         
@@ -399,7 +379,6 @@ namespace batalha_naval
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
                         }
-                        Console.WriteLine("AQUUUU tbemmm");
                         int indice0 = -1;
                         if(comecoEfim[0][0] == 'A')      indice0 = 0;
                         else if(comecoEfim[0][0] == 'B') indice0 = 1;
@@ -428,13 +407,11 @@ namespace batalha_naval
                                 validaPorNoMapa = false;
                             }
                         }
-                        Console.WriteLine($"AQUUUU validaPorNoMapa {validaPorNoMapa}");
                         if(validaPorNoMapa)
                         {
                             for(int i = menor; i <= maior; i++)
                             {
                                 posicoesPlayer[indice0,i] = "A";
-                                Console.WriteLine($"{indice0},{i}");
                             }
                             if(escolha == "PS")
                             {
@@ -458,7 +435,6 @@ namespace batalha_naval
                     }
                     else
                     {
-                        Console.WriteLine("é aqui essa coisa");
                         int inicial;
                         if(comecoEfim[0][0] == 'A') inicial = 0;
                         else if(comecoEfim[0][0] == 'B') inicial = 1;
@@ -482,10 +458,7 @@ namespace batalha_naval
                         else if(comecoEfim[1][0] == 'H') final = 7;
                         else if(comecoEfim[1][0] == 'I') final = 8;
                         else final = 9;
-
-                        Console.WriteLine($"teste bool {tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0}");
-                        Console.WriteLine($"teste tamanho {tamanhoPermitido}");
-                        Console.WriteLine($"teste math abs +1 :{(Math.Abs(final - inicial) + 1)}");
+                        
                         if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
@@ -501,9 +474,6 @@ namespace batalha_naval
                         int primeiro = Convert.ToInt32(char.ToString(comecoEfim[0][1]) + char.ToString(comecoEfim[0][2]));
                         int segundo = Convert.ToInt32(char.ToString(comecoEfim[1][1]));
                         
-                        Console.WriteLine($"primeiro {primeiro} sgudo {segundo}");
-                        Console.WriteLine($"validacao {tamanhoPermitido - (Math.Abs(primeiro - segundo) + 1)}");
-
                         if(tamanhoPermitido - (Math.Abs(primeiro - segundo) + 1) != 0)
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
@@ -560,7 +530,6 @@ namespace batalha_naval
                             {
                                 listaQuantidadeFrota[3] -= 1;
                             }
-                                Console.WriteLine("tchiriri thcarara");
                             return (true, posicoesPlayer, listaQuantidadeFrota);  
                         }    
                     }
@@ -589,10 +558,6 @@ namespace batalha_naval
                         else if(comecoEfim[1][0] == 'H') final = 7;
                         else if(comecoEfim[1][0] == 'I') final = 8;
                         else final = 9;
-
-                        Console.WriteLine($"teste bool {tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0}");
-                        Console.WriteLine($"teste tamanho {tamanhoPermitido}");
-                        Console.WriteLine($"teste math abs +1 :{(Math.Abs(final - inicial) + 1)}");
                         if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
@@ -608,8 +573,6 @@ namespace batalha_naval
                 {   
                     int inicial = 0;
                     int final = 0;
-                    Console.WriteLine($"teste {comecoEfim[0][0]} e {comecoEfim[1][0]}");
-                            
                     if(comecoEfim[0][0] == 'A')      inicial = 0;
                     else if(comecoEfim[0][0] == 'B') inicial = 1;
                     else if(comecoEfim[0][0] == 'C') inicial = 2;
@@ -719,15 +682,11 @@ namespace batalha_naval
         public static bool RegexEntrada(string coordenada)
         {   
             string padrao = @"^[A-J]{1}([1-9]{1}|[1-9]{1}0)[A-J]{1}([1-9]{1}|10)$";
-            Console.WriteLine($"teste input regex {Regex.IsMatch(coordenada, padrao)}");            
-        
             return Regex.IsMatch(coordenada, padrao);
         }
         public static bool RegexEscolhaDaFrota(string escolha)
         {   
             string padrao = @"^([P][S]|[N][T]|[D][S]|[S][B])";
-            Console.WriteLine($"input regex frota {Regex.IsMatch(escolha, padrao)}");            
-        
             return Regex.IsMatch(escolha, padrao);
         }
         public static void Iniciar(string[,] player1, string[,] player2)
@@ -774,8 +733,6 @@ namespace batalha_naval
                 
                 vencedor = true; // teste
             }
-            
-
         }
     }
 }
