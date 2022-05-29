@@ -36,8 +36,9 @@ namespace batalha_naval
             var player2 = Console.ReadLine();
             Console.Clear();
             var posicoesPlayer1 = PosicoesNoMapa(player1);
-            ConstroiMapa(posicoesPlayer1);
             var posicoesPlayer2 = PosicoesNoMapa(player2);
+            ConstroiMapa(posicoesPlayer1);
+            ConstroiMapa(posicoesPlayer1);
         }
         public static string[,] PosicoesNoMapa(string player)
         {
@@ -59,7 +60,7 @@ namespace batalha_naval
             bool validador = false;
             string escolha;
             var posicoes = (listaQuantidadeFrota, posicoesPlayer);
-            do
+            while(!validador)
             {
             Console.WriteLine($"Bem vindo {player}!!!");
             Console.WriteLine(@$"Você tem disponível {listaQuantidadeFrota[0]} Porta Aviões, {listaQuantidadeFrota[1]} Navio Tanques, {listaQuantidadeFrota[2]} Destroyers, {listaQuantidadeFrota[3]} Submarinos");
@@ -72,16 +73,21 @@ namespace batalha_naval
             escolha = Console.ReadLine();
             validador = RegexEscolhaDaFrota(escolha);
             Console.WriteLine("validador " + validador);
+
             if(validador == true)
             {
+                Console.WriteLine("to aqui dentro");
                 if(escolha == "PS")
                 {
+                    Console.WriteLine($" listaQua..frota {listaQuantidadeFrota[0]}");
                     if(listaQuantidadeFrota[0] == 0)
+                    {
                         Console.WriteLine("***Você já colocou seu Porta-Aviões***");
                         validador = false;
                     }
                     else
                     {
+                        Console.WriteLine("aqui no else");
                         posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
                     }
                 }
@@ -94,6 +100,7 @@ namespace batalha_naval
                     }
                     else
                     {
+                        Console.WriteLine("aqui no else do NT");
                         posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
                     }
                 }
@@ -121,7 +128,8 @@ namespace batalha_naval
                         posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota);
                     }
                 }          
-            }while(!validador);
+            }
+            }
             return (posicoes.Item1, posicoes.Item2);
         }
         public static (List<int>, string[,]) VerificaCoordenadas(string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota)
@@ -638,8 +646,8 @@ namespace batalha_naval
 
         public static bool RegexEscolhaDaFrota(string escolha)
         {   
-            string padrao = @"^([PS]|[NT]|[DS]|[SB])$";
-            Console.WriteLine($"teste input regex {Regex.IsMatch(escolha, padrao)}");            
+            string padrao = @"^([P][S]|[N][T]|[D][S]|[S][B])";
+            Console.WriteLine($"input regex frota {Regex.IsMatch(escolha, padrao)}");            
         
             return Regex.IsMatch(escolha, padrao);
         }
