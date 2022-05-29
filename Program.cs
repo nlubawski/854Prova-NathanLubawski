@@ -36,15 +36,13 @@ namespace batalha_naval
             var player2 = Console.ReadLine();
             Console.Clear();
             var posicoesPlayer1 = PosicoesNoMapa(player1);
+            Console.Clear();
             var posicoesPlayer2 = PosicoesNoMapa(player2);
-            ConstroiMapa(posicoesPlayer1);
-            ConstroiMapa(posicoesPlayer2);
-
-            //Iniciar(posicoesPlayer1,posicoesPlayer2);
+            Iniciar(player1, posicoesPlayer1, player2, posicoesPlayer2);
         }
         public static string[,] PosicoesNoMapa(string player)
         {
-            var listaQuantidadeFrota = new List<int>{1,0,0,2};
+            var listaQuantidadeFrota = new List<int>{0,0,0,1};
             var posicoesPlayer = new string[10,10];
             for(var i = 0; i < 10; i++)
             {
@@ -689,12 +687,22 @@ namespace batalha_naval
             string padrao = @"^([P][S]|[N][T]|[D][S]|[S][B])";
             return Regex.IsMatch(escolha, padrao);
         }
-        public static void Iniciar(string[,] player1, string[,] player2)
+        public static bool RegexValidaJogada(string jogada)
+        {   
+            string padrao = @"^[A-J]{1}([1-9]|10)$";
+            Console.WriteLine($"jogada ok: {Regex.IsMatch(jogada, padrao)}");
+            return Regex.IsMatch(jogada, padrao);
+        }
+        public static void Iniciar(string player1, string[,] posicoesPlayer1, string player2, string[,] posicoesPlayer2)
         {
             Console.WriteLine("vamos ao jogo");
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
+            int contagemPlayer1 = 2; //teste
+            int contagemPlayer2 = 14;
+            var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
+            
             for(var i = 0; i < 10; i++)
             {
                 for(var j = 0; j < 10; j++)
@@ -704,35 +712,95 @@ namespace batalha_naval
                 }
             }
             
-            string jogadaPlayer1; 
-            int indice1;
-            int indice2;
             while(!vencedor)
             {
-                ConstroiMapa(tabuleiroParaPlayer1);
-                Console.WriteLine($"Sua vez de jogar jogador1");
-                jogadaPlayer1 = Console.ReadLine();
-                //validar a jogada e pegar os indices
-                indice1 = 0;
-                indice2 = 1;
-                // if(player2[indice1,indice2] == "A")
-                // {
-                //     tabuleiroParaPlayer1[indice1][indice2] = "A";
-                // }
-                // else
-                // {
-                //     tabuleiroParaPlayer1[indice1][indice2] = "X";
-                // }
-                //verifica se ganhou igualar matriz funciona?
-                vencedor = tabuleiroParaPlayer1.Equals(player2);
-                Console.WriteLine($"vencedor {vencedor}");
-                if(vencedor)
-                {
-                    Console.WriteLine($"Parabéns {player1}! Você Ganhou!!!"); 
-                }
+                resultado = Jogada(player1, tabuleiroParaPlayer1, posicoesPlayer2, contagemPlayer1, vencedor);
+                vencedor = resultado.Item1;
+                contagemPlayer1 = resultado.Item2;
+                tabuleiroParaPlayer1 = resultado.Item3;
                 
-                vencedor = true; // teste
+
+                if(vencedor == false)
+                {
+                    resultado = Jogada(player2, tabuleiroParaPlayer2, posicoesPlayer1, contagemPlayer2, vencedor);
+                    vencedor = resultado.Item1;
+                    contagemPlayer2 = resultado.Item2;
+                    tabuleiroParaPlayer2 = resultado.Item3;
+                }
+
             }
+        }
+
+        public static (bool, int, string[,]) Jogada(string player, string[,] tabuleiroParaPlayer, string[,] posicoesPlayerOposto, int contagemPlayer, bool vencedor)
+        {
+                ConstroiMapa(tabuleiroParaPlayer);
+                Console.WriteLine($"Sua vez de jogar {player}");
+                string jogadaPlayer;
+                jogadaPlayer = Console.ReadLine();
+
+                while(!RegexValidaJogada(jogadaPlayer))
+                {
+                    Console.WriteLine($"Tente novamente {player}");
+                    jogadaPlayer = Console.ReadLine();
+                }
+                int indice1 = -1;
+                int indice2 = -1;
+                if(jogadaPlayer.Length == 2)
+                {
+                    if(jogadaPlayer[1] == '1') indice2 = 0;
+                    else if(jogadaPlayer[1] == '2') indice2 = 1;
+                    else if(jogadaPlayer[1] == '3') indice2 = 2;
+                    else if(jogadaPlayer[1] == '4') indice2 = 3;
+                    else if(jogadaPlayer[1] == '5') indice2 = 4;
+                    else if(jogadaPlayer[1] == '6') indice2 = 5;
+                    else if(jogadaPlayer[1] == '7') indice2 = 6;
+                    else if(jogadaPlayer[1] == '8') indice2 = 7;
+                    else if(jogadaPlayer[1] == '9') indice2 = 8;
+                    else indice2 = 9;
+
+                    if(jogadaPlayer[0] == 'A') indice1 = 0;
+                    else if(jogadaPlayer[0] == 'B') indice1 = 1;
+                    else if(jogadaPlayer[0] == 'C') indice1 = 2;
+                    else if(jogadaPlayer[0] == 'D') indice1 = 3;
+                    else if(jogadaPlayer[0] == 'E') indice1 = 4;
+                    else if(jogadaPlayer[0] == 'F') indice1 = 5;
+                    else if(jogadaPlayer[0] == 'G') indice1 = 6;
+                    else if(jogadaPlayer[0] == 'H') indice1 = 7;
+                    else if(jogadaPlayer[0] == 'I') indice1 = 8;
+                    else indice1 = 9;
+                }
+                else if(jogadaPlayer.Length == 3)
+                {
+                    indice2 = 9;
+
+                    if(jogadaPlayer[0] == 'A') indice1 = 0;
+                    else if(jogadaPlayer[0] == 'B') indice1 = 1;
+                    else if(jogadaPlayer[0] == 'C') indice1 = 2;
+                    else if(jogadaPlayer[0] == 'D') indice1 = 3;
+                    else if(jogadaPlayer[0] == 'E') indice1 = 4;
+                    else if(jogadaPlayer[0] == 'F') indice1 = 5;
+                    else if(jogadaPlayer[0] == 'G') indice1 = 6;
+                    else if(jogadaPlayer[0] == 'H') indice1 = 7;
+                    else if(jogadaPlayer[0] == 'I') indice1 = 8;
+                    else indice1 = 9;
+                }
+
+                if(posicoesPlayerOposto[indice1,indice2] == "A")
+                {
+                    tabuleiroParaPlayer[indice1,indice2] = "A";
+                    contagemPlayer -=1;
+                }
+                else
+                {
+                    tabuleiroParaPlayer[indice1,indice2] = "X";
+                }
+                if(contagemPlayer == 0)
+                {
+                    vencedor = true;
+                    Console.WriteLine($"Parabéns {player}! Você Ganhou!!!"); 
+                }
+
+                return (vencedor, contagemPlayer, tabuleiroParaPlayer);
         }
     }
 }
