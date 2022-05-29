@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace batalha_naval
 {
@@ -17,8 +18,22 @@ namespace batalha_naval
         {
             bool opcaoControle;
             int opcaoEscolhida;
+            
             do
             {
+            Console.Clear();
+            Console.WriteLine(@$"         
+                                         o oo oo 
+                                            o ooo           _________
+                                              o oo         |        #
+                                               o o         |   _____#
+                                                oo        _|_ _|_
+                                                 o       |       |
+                __                    ___________________|       |_________________
+                | ---_______----------                                              \
+                &  ;|    _____                    TURMA 854                          |
+                |__ ---------------________________________________________________ /
+            ");
                 Console.WriteLine("Jogar contra o computador digite 1");
                 Console.WriteLine("Jogar contra adversário real digite 2");
                 var opcao = Console.ReadLine();
@@ -30,9 +45,13 @@ namespace batalha_naval
         public static void Jogar2()
         {
             Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Digite o nome do player 1");
+            Console.ResetColor();
             var player1 = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Digite o nome do player 2");
+            Console.ResetColor();
             var player2 = Console.ReadLine();
             Console.Clear();
             var posicoesPlayer1 = PosicoesNoMapa(player1);
@@ -68,7 +87,10 @@ namespace batalha_naval
             var posicoes = (listaQuantidadeFrota, posicoesPlayer);
             while(!validador)
             {
-            Console.WriteLine($"Bem vindo {player}!!!");
+            Console.Write($"Bem vindo");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($" {player}!!!");
+            Console.ResetColor();
             Console.WriteLine(@$"Você tem disponível {listaQuantidadeFrota[0]} Porta Aviões, {listaQuantidadeFrota[1]} Navio Tanques, {listaQuantidadeFrota[2]} Destroyers, {listaQuantidadeFrota[3]} Submarinos");
             Console.WriteLine("");
             Console.WriteLine("Qual o tipo de embarcação? Digite");
@@ -727,22 +749,30 @@ namespace batalha_naval
                     contagemPlayer2 = resultado.Item2;
                     tabuleiroParaPlayer2 = resultado.Item3;
                 }
-
             }
         }
 
         public static (bool, int, string[,]) Jogada(string player, string[,] tabuleiroParaPlayer, string[,] posicoesPlayerOposto, int contagemPlayer, bool vencedor)
         {
                 ConstroiMapa(tabuleiroParaPlayer);
-                Console.WriteLine($"Sua vez de jogar {player}");
+                Console.Write($"Sua vez de jogar ");
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"{player}:");
+                
                 string jogadaPlayer;
+                Console.ResetColor();
                 jogadaPlayer = Console.ReadLine();
 
                 while(!RegexValidaJogada(jogadaPlayer))
                 {
-                    Console.WriteLine($"Tente novamente {player}");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write("Tente novamente ");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(player);
+                    Console.ResetColor();
                     jogadaPlayer = Console.ReadLine();
                 }
+                Console.Clear();
                 int indice1 = -1;
                 int indice2 = -1;
                 if(jogadaPlayer.Length == 2)
@@ -799,6 +829,10 @@ namespace batalha_naval
                     vencedor = true;
                     Console.WriteLine($"Parabéns {player}! Você Ganhou!!!"); 
                 }
+                ConstroiMapa(tabuleiroParaPlayer);
+                Console.Read();
+                Console.WriteLine("tempo de espera ...");
+                Thread.Sleep(5000);
 
                 return (vencedor, contagemPlayer, tabuleiroParaPlayer);
         }
