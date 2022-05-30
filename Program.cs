@@ -11,6 +11,7 @@ namespace batalha_naval
         static void Main(string[] args)
         {
             Console.Clear();
+            //Jogar3(); //opcao em construcao pra por maquina x maquina 
             int opcaoEscolhida = Entrada();
             if (opcaoEscolhida == 2) Jogar2();
             if (opcaoEscolhida == 1) Jogar1();
@@ -19,7 +20,6 @@ namespace batalha_naval
         {
             bool opcaoControle;
             int opcaoEscolhida;
-            
             do
             {
             Console.Clear();
@@ -101,7 +101,6 @@ namespace batalha_naval
             Console.WriteLine("SB para Submarinos (ocupa ocupa 2 espacos)");
             escolha = Console.ReadLine();
             validador = RegexEscolhaDaFrota(escolha);
-
             if(validador == true)
             {
                 if(escolha == "PS")
@@ -178,7 +177,6 @@ namespace batalha_naval
                     tabuleiroAuxilar[i,j] = " ";
                 }
             }
-
             do
             {
                 ConstroiMapa(tabuleiroAuxilar);
@@ -190,7 +188,6 @@ namespace batalha_naval
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
-                
                     if(coordenadas.Length == 4)
                     {
                         if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[2])) validaEntrada.Item1 = false;
@@ -247,12 +244,9 @@ namespace batalha_naval
                         }
                     }
                 }
-
-                
             }while(!validaEntrada.Item1 || !controleEntrada);
             return (validaEntrada.Item3, posicoesPlayer);
         }
-
         public static (bool,string[,],List<int>) VerificaTamanho(string[] comecoEfim, string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota )
         {
             if(comecoEfim[0][0] != comecoEfim[1][0] && comecoEfim[0][1] != comecoEfim[1][1])
@@ -284,7 +278,6 @@ namespace batalha_naval
                     else if(comecoEfim[0][0] == 'H') indice0 = 7;
                     else if(comecoEfim[0][0] == 'I') indice0 = 8;
                     else                             indice0 = 9;
-
                     int indice1 = Convert.ToInt32(char.ToString(comecoEfim[0][1])) - 1;
                     int indice2 = Convert.ToInt32(char.ToString(comecoEfim[1][1])) - 1;
                     int maior = indice2;
@@ -341,7 +334,6 @@ namespace batalha_naval
                     else if(comecoEfim[0][0] == 'H') inicial = 7;
                     else if(comecoEfim[0][0] == 'I') inicial = 8;
                     else inicial = 9;
-
                     int final;
                     if(comecoEfim[1][0] == 'A') final = 0;
                     else if(comecoEfim[1][0] == 'B') final = 1;
@@ -353,12 +345,10 @@ namespace batalha_naval
                     else if(comecoEfim[1][0] == 'H') final = 7;
                     else if(comecoEfim[1][0] == 'I') final = 8;
                     else final = 9;
-
                     if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                     {
                         return (false, posicoesPlayer, listaQuantidadeFrota);
                     } 
-                    
                     int indice0 = Convert.ToInt32(char.ToString(comecoEfim[0][1]));
                     int indice1 = inicial;
                     int indice2 = final;
@@ -401,7 +391,6 @@ namespace batalha_naval
                         }
                         return (true, posicoesPlayer, listaQuantidadeFrota); 
                     }
-                    
                 }
             }
             if(tamanhoDaEntrada == 5)
@@ -412,7 +401,6 @@ namespace batalha_naval
                     {   
                         int primeiro = Convert.ToInt32(char.ToString(comecoEfim[0][1]));
                         int segundo = Convert.ToInt32(char.ToString(comecoEfim[1][1]) + char.ToString(comecoEfim[1][2]));
-                        
                         if(tamanhoPermitido - (Math.Abs(primeiro - segundo )+ 1) != 0)
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
@@ -484,7 +472,6 @@ namespace batalha_naval
                         else if(comecoEfim[0][0] == 'H') inicial = 7;
                         else if(comecoEfim[0][0] == 'I') inicial = 8;
                         else inicial = 9;
-
                         int final;
                         if(comecoEfim[1][0] == 'A') final = 0;
                         else if(comecoEfim[1][0] == 'B') final = 1;
@@ -496,12 +483,10 @@ namespace batalha_naval
                         else if(comecoEfim[1][0] == 'H') final = 7;
                         else if(comecoEfim[1][0] == 'I') final = 8;
                         else final = 9;
-                        
                         if(tamanhoPermitido - (Math.Abs(final - inicial) + 1) != 0)
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
                         }
-                        //TOFIX POR NO MAPS
                         return (true, posicoesPlayer, listaQuantidadeFrota);
                     }
                 }
@@ -515,9 +500,7 @@ namespace batalha_naval
                         if(tamanhoPermitido - (Math.Abs(primeiro - segundo) + 1) != 0)
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
-                        } 
-                        
-
+                        }
                         int indice0 = -1;
                         if(comecoEfim[0][0] == 'A')      indice0 = 0;
                         else if(comecoEfim[0][0] == 'B') indice0 = 1;
@@ -584,7 +567,6 @@ namespace batalha_naval
                         else if(comecoEfim[0][0] == 'H') inicial = 7;
                         else if(comecoEfim[0][0] == 'I') inicial = 8;
                         else inicial = 9;
-
                         int final;
                         if(comecoEfim[1][0] == 'A') final = 0;
                         else if(comecoEfim[1][0] == 'B') final = 1;
@@ -600,7 +582,6 @@ namespace batalha_naval
                         {
                             return (false, posicoesPlayer, listaQuantidadeFrota);
                         }
-                        //TO FIX POR NO MAPS
                         return (true, posicoesPlayer, listaQuantidadeFrota);
                     }
                 }
@@ -621,7 +602,6 @@ namespace batalha_naval
                     else if(comecoEfim[0][0] == 'H') inicial = 7;
                     else if(comecoEfim[0][0] == 'I') inicial = 8;
                                                 else inicial = 9;
-
                     if(comecoEfim[1][0] == 'A')      final = 0;
                     else if(comecoEfim[1][0] == 'B') final = 1;
                     else if(comecoEfim[1][0] == 'C') final = 2;
@@ -632,18 +612,15 @@ namespace batalha_naval
                     else if(comecoEfim[1][0] == 'H') final = 7;
                     else if(comecoEfim[1][0] == 'I') final = 8;
                                                 else final = 9;
-
                     if(tamanhoPermitido - (Math.Abs(inicial - final) + 1) != 0)
                     {
                         return (false, posicoesPlayer, listaQuantidadeFrota);
                     }    
-
                     int indice0 = 9;
                     int indice1 = inicial;
                     int indice2 = final;
                     int maior = indice2;
                     int menor = indice1;
-
                     if(indice1 > maior)
                     {
                         maior = indice1;
@@ -679,7 +656,6 @@ namespace batalha_naval
                             {
                                 listaQuantidadeFrota[3] -= 1;
                             }
-                        
                         return (true, posicoesPlayer, listaQuantidadeFrota); 
                     }
                 }
@@ -690,9 +666,7 @@ namespace batalha_naval
             }  
             return (false, posicoesPlayer, listaQuantidadeFrota);     
         }
-
         public static void ConstroiMapa(string[,] mapa){
-
             Console.WriteLine("   |" + " 1 " + " 2 " + " 3 " + " 4 " + " 5 " + " 6 " + " 7 " + " 8 " + " 9 " + " 10 ");
             Console.WriteLine("------------------------------------");
             Console.WriteLine($" A | {mapa[0, 0]}  {mapa[0, 1]}  {mapa[0, 2]}  {mapa[0, 3]}  {mapa[0, 4]}  {mapa[0, 5]}  {mapa[0, 6]}  {mapa[0, 7]}  {mapa[0, 8]}  {mapa[0, 9]}");
@@ -714,7 +688,6 @@ namespace batalha_naval
             Console.WriteLine($" I | {mapa[8, 0]}  {mapa[8, 1]}  {mapa[8, 2]}  {mapa[8, 3]}  {mapa[8, 4]}  {mapa[8, 5]}  {mapa[8, 6]}  {mapa[8, 7]}  {mapa[8, 8]}  {mapa[8, 9]}");
             Console.WriteLine("   |");
             Console.WriteLine($" J | {mapa[0, 0]}  {mapa[9, 1]}  {mapa[9, 2]}  {mapa[9, 3]}  {mapa[9, 4]}  {mapa[9, 5]}  {mapa[9, 6]}  {mapa[9, 7]}  {mapa[9, 8]}  {mapa[9, 9]}");
-
         }
         public static bool RegexEntrada(string coordenada)
         {   
@@ -737,10 +710,9 @@ namespace batalha_naval
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
-            int contagemPlayer1 = 2; //teste
-            int contagemPlayer2 = 2; //Tofix
+            int contagemPlayer1 = 14; 
+            int contagemPlayer2 = 14; 
             var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
-            
             for(var i = 0; i < 10; i++)
             {
                 for(var j = 0; j < 10; j++)
@@ -749,15 +721,12 @@ namespace batalha_naval
                     tabuleiroParaPlayer2[i,j] = " ";
                 }
             }
-            
             while(!vencedor)
             {
                 resultado = Jogada(player1, tabuleiroParaPlayer1, posicoesPlayer2, contagemPlayer1, vencedor);
                 vencedor = resultado.Item1;
                 contagemPlayer1 = resultado.Item2;
                 tabuleiroParaPlayer1 = resultado.Item3;
-                
-
                 if(vencedor == false)
                 {
                     resultado = Jogada(player2, tabuleiroParaPlayer2, posicoesPlayer1, contagemPlayer2, vencedor);
@@ -767,7 +736,6 @@ namespace batalha_naval
                 }
             }
         }
-
         public static (bool, int, string[,]) Jogada(string player, string[,] tabuleiroParaPlayer, string[,] posicoesPlayerOposto, int contagemPlayer, bool vencedor)
         {
                 ConstroiMapa(tabuleiroParaPlayer);
@@ -818,7 +786,6 @@ namespace batalha_naval
                 else if(jogadaPlayer.Length == 3)
                 {
                     indice2 = 9;
-
                     if(jogadaPlayer[0] == 'A') indice1 = 0;
                     else if(jogadaPlayer[0] == 'B') indice1 = 1;
                     else if(jogadaPlayer[0] == 'C') indice1 = 2;
@@ -877,15 +844,13 @@ namespace batalha_naval
                     Console.ResetColor();
                 }  
                 Console.WriteLine("trocando turno ...");
-                Thread.Sleep(3000);
+                Thread.Sleep(2000);
                 if(!vencedor)
                 {
                     Console.Clear();
                 }
-
                 return (vencedor, contagemPlayer, tabuleiroParaPlayer);
         }
-
         public static void Jogar1()
         {
             Console.Clear();
@@ -899,13 +864,9 @@ namespace batalha_naval
             Console.ResetColor();
             var posicoesPlayer1 = PosicoesNoMapa(player1);
             Console.Clear();
-
-            //gerar posicoes do player 2
             var posicoesPlayer2 = PosicoesNoMapa();
             Iniciar(player1, posicoesPlayer1, posicoesPlayer2);
         }
-
-        //minha primeira sobrecarga
         public static string[,] PosicoesNoMapa()
         {
             var listaQuantidadeFrota = new List<int>{0,0,0,1};
@@ -926,8 +887,6 @@ namespace batalha_naval
             }
             return posicoesPlayer;
         }  
-
-        //outra sobrecarga
         public static (List<int>, string[,]) TipoDaEmbarcacao(List<int> listaQuantidadeFrota, string[,] posicoesPlayer)
         {
             bool validador = false;
@@ -936,14 +895,11 @@ namespace batalha_naval
             var posicoes = (listaQuantidadeFrota, posicoesPlayer);
             while(!validador)
             {
-            
-            //gerar o aleatorios
             Random frota = new Random();
             int numeroAleatorio = frota.Next(0,4);
             string[] entradasFrota = {"PS","NT","DS","SB"};
             escolha = entradasFrota[numeroAleatorio];
             validador = RegexEscolhaDaFrota(escolha);
-
             if(validador == true)
             {
                 if(escolha == "PS")
@@ -994,8 +950,6 @@ namespace batalha_naval
             }
             return (posicoes.Item1, posicoes.Item2);
         }
-
-        //mais uma sobrecarga
         public static (List<int>, string[,]) VerificaCoordenadas(string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota, string Boss)
         { 
             (bool,string[,],List<int>) validaEntrada = (true, posicoesPlayer,listaQuantidadeFrota);
@@ -1011,17 +965,16 @@ namespace batalha_naval
             }
             do
             {
-                //gerar o aleatorios
                 Random posicao = new Random();
-                int numeroAleatorioPosicao = posicao.Next(0,9);
+                int numeroAleatorioPosicao = posicao.Next(0,10);
                 string[] entradasLetras = {"A","B","C","D","E","F","G","H","I","J"};
                 string[] entradasNumericas = {"1","2","3","4","5","6","7","8","9","10"};
                 coordenadas = entradasLetras[numeroAleatorioPosicao];
-                numeroAleatorioPosicao = posicao.Next(0,9);
+                numeroAleatorioPosicao = posicao.Next(0,10);
                 coordenadas += entradasNumericas[numeroAleatorioPosicao];
-                numeroAleatorioPosicao = posicao.Next(0,9);
+                numeroAleatorioPosicao = posicao.Next(0,10);
                 coordenadas += entradasLetras[numeroAleatorioPosicao];
-                numeroAleatorioPosicao = posicao.Next(0,9);
+                numeroAleatorioPosicao = posicao.Next(0,10);
                 coordenadas += entradasNumericas[numeroAleatorioPosicao];
                 controleEntrada = RegexEntrada(coordenadas);
                 if(controleEntrada)
@@ -1029,7 +982,6 @@ namespace batalha_naval
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
-                
                     if(coordenadas.Length == 4)
                     {
                         if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[2])) validaEntrada.Item1 = false;
@@ -1086,12 +1038,9 @@ namespace batalha_naval
                         }
                     }
                 }
-
-                
             }while(!validaEntrada.Item1 || !controleEntrada);
             return (validaEntrada.Item3, posicoesPlayer);
         }
-
         public static void Iniciar(string player1, string[,] posicoesPlayer1, string[,] posicoesPlayer2)
         {
             Console.WriteLine($"Vamos ao jogo! Boa Sorte {player1}!");
@@ -1128,27 +1077,23 @@ namespace batalha_naval
                 }
             }
         }
-
         public static (bool, int, string[,]) Jogada(string[,] tabuleiroParaPlayer, string[,] posicoesPlayerOposto, int contagemPlayer, bool vencedor)
         {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"Hannibal jogou");
-                
                 string jogadaPlayer;
                 Console.ResetColor();
-                //gerar o aleatorios
                 Random posicao = new Random();
-                int numeroAleatorioPosicao = posicao.Next(0,9);
+                int numeroAleatorioPosicao = posicao.Next(0,10);
                 string[] entradasLetras = {"A","B","C","D","E","F","G","H","I","J"};
                 string[] entradasNumericas = {"1","2","3","4","5","6","7","8","9","10"};
                 jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
-                numeroAleatorioPosicao = posicao.Next(0,9);
+                numeroAleatorioPosicao = posicao.Next(0,10);
                 jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
-
                 while(!RegexValidaJogada(jogadaPlayer))
                 {
                     jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
-                    numeroAleatorioPosicao = posicao.Next(0,9);
+                    numeroAleatorioPosicao = posicao.Next(0,10);
                     jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
                 }
                 Console.Clear();
@@ -1181,7 +1126,6 @@ namespace batalha_naval
                 else if(jogadaPlayer.Length == 3)
                 {
                     indice2 = 9;
-
                     if(jogadaPlayer[0] == 'A') indice1 = 0;
                     else if(jogadaPlayer[0] == 'B') indice1 = 1;
                     else if(jogadaPlayer[0] == 'C') indice1 = 2;
@@ -1232,12 +1176,163 @@ namespace batalha_naval
                     Console.ResetColor();
                 }  
                 Console.WriteLine("trocando turno ...");
-                Thread.Sleep(2000);
+                //Thread.Sleep(2000);
                 if(!vencedor)
                 {
                     Console.Clear();
                 }
+                return (vencedor, contagemPlayer, tabuleiroParaPlayer);
+        }
+        public static void Jogar3()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Assita a incrível batalha entre Hannibal e Norman Bates!!! Pega a pipoca :D");
+            Thread.Sleep(2000);
+            Console.ResetColor();
+            var posicoesPlayer1 = PosicoesNoMapa();
+            var posicoesPlayer2 = PosicoesNoMapa();
+            Iniciar(posicoesPlayer1, posicoesPlayer2);
+        }
+        public static void Iniciar(string[,] posicoesPlayer1, string[,] posicoesPlayer2)
+        {
+            Console.WriteLine($"Vamos ao jogo!!!");
+            bool vencedor = false;
+            string[,] tabuleiroParaPlayer1 = new string[10,10];
+            string[,] tabuleiroParaPlayer2 = new string[10,10];
+            int contagemPlayer1 = 14; 
+            int contagemPlayer2 = 14; 
+            var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
+            
+            for(var i = 0; i < 10; i++)
+            {
+                for(var j = 0; j < 10; j++)
+                {
+                    tabuleiroParaPlayer1[i,j] = " ";
+                    tabuleiroParaPlayer2[i,j] = " ";
+                }
+            }
+            while(!vencedor)
+            {
+                resultado = JogadaAdaptada(tabuleiroParaPlayer1, posicoesPlayer2, contagemPlayer1, vencedor);
+                vencedor = resultado.Item1;
+                contagemPlayer1 = resultado.Item2;
+                tabuleiroParaPlayer1 = resultado.Item3;
+                
 
+                if(vencedor == false)
+                {
+                    resultado = Jogada(tabuleiroParaPlayer2, posicoesPlayer1, contagemPlayer2, vencedor);
+                    vencedor = resultado.Item1;
+                    contagemPlayer2 = resultado.Item2;
+                    tabuleiroParaPlayer2 = resultado.Item3;
+                }
+            }
+        }
+        public static (bool, int, string[,]) JogadaAdaptada(string[,] tabuleiroParaPlayer, string[,] posicoesPlayerOposto, int contagemPlayer, bool vencedor)
+        {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Norman Bates jogou");
+                
+                string jogadaPlayer;
+                Console.ResetColor();
+                Random posicao = new Random();
+                int numeroAleatorioPosicao = posicao.Next(0,10);
+                string[] entradasLetras = {"A","B","C","D","E","F","G","H","I","J"};
+                string[] entradasNumericas = {"1","2","3","4","5","6","7","8","9","10"};
+                jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
+                numeroAleatorioPosicao = posicao.Next(0,10);
+                jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
+                while(!RegexValidaJogada(jogadaPlayer))
+                {
+                    jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
+                    numeroAleatorioPosicao = posicao.Next(0,10);
+                    jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
+                }
+                Console.Clear();
+                int indice1 = -1;
+                int indice2 = -1;
+                if(jogadaPlayer.Length == 2)
+                {
+                    if(jogadaPlayer[1] == '1') indice2 = 0;
+                    else if(jogadaPlayer[1] == '2') indice2 = 1;
+                    else if(jogadaPlayer[1] == '3') indice2 = 2;
+                    else if(jogadaPlayer[1] == '4') indice2 = 3;
+                    else if(jogadaPlayer[1] == '5') indice2 = 4;
+                    else if(jogadaPlayer[1] == '6') indice2 = 5;
+                    else if(jogadaPlayer[1] == '7') indice2 = 6;
+                    else if(jogadaPlayer[1] == '8') indice2 = 7;
+                    else if(jogadaPlayer[1] == '9') indice2 = 8;
+                    else indice2 = 9;
+                    if(jogadaPlayer[0] == 'A') indice1 = 0;
+                    else if(jogadaPlayer[0] == 'B') indice1 = 1;
+                    else if(jogadaPlayer[0] == 'C') indice1 = 2;
+                    else if(jogadaPlayer[0] == 'D') indice1 = 3;
+                    else if(jogadaPlayer[0] == 'E') indice1 = 4;
+                    else if(jogadaPlayer[0] == 'F') indice1 = 5;
+                    else if(jogadaPlayer[0] == 'G') indice1 = 6;
+                    else if(jogadaPlayer[0] == 'H') indice1 = 7;
+                    else if(jogadaPlayer[0] == 'I') indice1 = 8;
+                    else indice1 = 9;
+                }
+                else if(jogadaPlayer.Length == 3)
+                {
+                    indice2 = 9;
+                    if(jogadaPlayer[0] == 'A') indice1 = 0;
+                    else if(jogadaPlayer[0] == 'B') indice1 = 1;
+                    else if(jogadaPlayer[0] == 'C') indice1 = 2;
+                    else if(jogadaPlayer[0] == 'D') indice1 = 3;
+                    else if(jogadaPlayer[0] == 'E') indice1 = 4;
+                    else if(jogadaPlayer[0] == 'F') indice1 = 5;
+                    else if(jogadaPlayer[0] == 'G') indice1 = 6;
+                    else if(jogadaPlayer[0] == 'H') indice1 = 7;
+                    else if(jogadaPlayer[0] == 'I') indice1 = 8;
+                    else indice1 = 9;
+                }
+                bool acerto = false;
+                if(posicoesPlayerOposto[indice1,indice2] == "X")
+                {
+                    tabuleiroParaPlayer[indice1,indice2] = "X";
+                    contagemPlayer -=1;
+                    acerto = true;
+                }
+                else
+                {
+                    tabuleiroParaPlayer[indice1,indice2] = "A";
+                }
+                if(contagemPlayer == 0)
+                {
+                    vencedor = true;
+                    
+                }
+                ConstroiMapa(tabuleiroParaPlayer);
+                if(acerto)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write($"Norman Bates jogou{jogadaPlayer} e Acertou!");
+                    Thread.Sleep(2000);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"Norman Bates jogou {jogadaPlayer} e Errou...");
+                    Thread.Sleep(1000);
+                    Console.ResetColor();
+                }
+                if(vencedor)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(" Você Perdeu para o Norman Bates!!!");
+                    Thread.Sleep(3000);
+                    Console.ResetColor();
+                }  
+                Console.WriteLine("trocando turno ...");
+                //Thread.Sleep(2000);
+                if(!vencedor)
+                {
+                    Console.Clear();
+                }
                 return (vencedor, contagemPlayer, tabuleiroParaPlayer);
         }
     }
