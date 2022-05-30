@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -713,8 +713,8 @@ namespace batalha_naval
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
-            int contagemPlayer1 = 14; 
-            int contagemPlayer2 = 14; 
+            int contagemPlayer1 = 30; 
+            int contagemPlayer2 = 30; 
             var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
             for(var i = 0; i < 10; i++)
             {
@@ -1053,8 +1053,8 @@ namespace batalha_naval
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
-            int contagemPlayer1 = 14; 
-            int contagemPlayer2 = 14; 
+            int contagemPlayer1 = 30; 
+            int contagemPlayer2 = 30; 
             var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
             
             for(var i = 0; i < 10; i++)
@@ -1206,8 +1206,8 @@ namespace batalha_naval
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
-            int contagemPlayer1 = 14; 
-            int contagemPlayer2 = 14; 
+            int contagemPlayer1 = 30; 
+            int contagemPlayer2 = 30; 
             var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
             
             for(var i = 0; i < 10; i++)
