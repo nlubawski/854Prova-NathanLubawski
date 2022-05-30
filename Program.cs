@@ -62,7 +62,7 @@ namespace batalha_naval
         }
         public static string[,] PosicoesNoMapa(string player)
         {
-            var listaQuantidadeFrota = new List<int>{0,0,0,1};
+            var listaQuantidadeFrota = new List<int>{1,2,3,4};
             var posicoesPlayer = new string[10,10];
             for(var i = 0; i < 10; i++)
             {
@@ -374,7 +374,6 @@ namespace batalha_naval
                     {
                         if(posicoesPlayer[i,indice0] == "X")
                         {
-                            Console.WriteLine("conflito");
                             validaPorNoMapa = false;
                         }
                     }
@@ -655,7 +654,6 @@ namespace batalha_naval
                     {
                         if(posicoesPlayer[i,indice0] == "X")
                         {
-                            Console.WriteLine("conflito");
                             validaPorNoMapa = false;
                         }
                     }
@@ -731,12 +729,11 @@ namespace batalha_naval
         public static bool RegexValidaJogada(string jogada)
         {   
             string padrao = @"^[A-J]{1}([1-9]|10)$";
-            Console.WriteLine($"jogada ok: {Regex.IsMatch(jogada, padrao)}");
             return Regex.IsMatch(jogada, padrao);
         }
         public static void Iniciar(string player1, string[,] posicoesPlayer1, string player2, string[,] posicoesPlayer2)
         {
-            Console.WriteLine("vamos ao jogo");
+            Console.WriteLine("Vamos ao jogo! Boa Sorte!");
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
@@ -1026,9 +1023,6 @@ namespace batalha_naval
                 coordenadas += entradasLetras[numeroAleatorioPosicao];
                 numeroAleatorioPosicao = posicao.Next(0,9);
                 coordenadas += entradasNumericas[numeroAleatorioPosicao];
-
-                Console.WriteLine(coordenadas);
-
                 controleEntrada = RegexEntrada(coordenadas);
                 if(controleEntrada)
                 {
@@ -1100,7 +1094,7 @@ namespace batalha_naval
 
         public static void Iniciar(string player1, string[,] posicoesPlayer1, string[,] posicoesPlayer2)
         {
-            Console.WriteLine("vamos ao jogo");
+            Console.WriteLine($"Vamos ao jogo! Boa Sorte {player1}!");
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
@@ -1150,8 +1144,6 @@ namespace batalha_naval
                 jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
                 numeroAleatorioPosicao = posicao.Next(0,9);
                 jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
-
-                Console.WriteLine(jogadaPlayer);
 
                 while(!RegexValidaJogada(jogadaPlayer))
                 {
@@ -1220,16 +1212,16 @@ namespace batalha_naval
                 ConstroiMapa(tabuleiroParaPlayer);
                 if(acerto)
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"Hannibal Acertou!");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write($"Hannibal jogou{jogadaPlayer} e Acertou!");
                     Thread.Sleep(2000);
                     Console.ResetColor();
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write($"Hannibal Errou...");
-                    Thread.Sleep(2000);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write($"Hannibal jogou {jogadaPlayer} e Errou...");
+                    Thread.Sleep(1000);
                     Console.ResetColor();
                 }
                 if(vencedor)
@@ -1240,7 +1232,7 @@ namespace batalha_naval
                     Console.ResetColor();
                 }  
                 Console.WriteLine("trocando turno ...");
-                Thread.Sleep(3000);
+                Thread.Sleep(2000);
                 if(!vencedor)
                 {
                     Console.Clear();
