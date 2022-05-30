@@ -1098,8 +1098,8 @@ namespace batalha_naval
             bool vencedor = false;
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
-            int contagemPlayer1 = 2; //teste
-            int contagemPlayer2 = 2; //Tofix
+            int contagemPlayer1 = 14; 
+            int contagemPlayer2 = 14; 
             var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
             
             for(var i = 0; i < 10; i++)
