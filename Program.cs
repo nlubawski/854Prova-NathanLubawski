@@ -107,7 +107,9 @@ namespace batalha_naval
                 {
                     if(listaQuantidadeFrota[0] == 0)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("***Você já colocou seu Porta-Aviões***");
+                        Console.ResetColor();
                         validador = false;
                     }
                     else
@@ -119,7 +121,9 @@ namespace batalha_naval
                 {
                     if(listaQuantidadeFrota[1] == 0)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("***Você já colocou seus Navios-Tanque***");
+                        Console.ResetColor();
                         validador = false;
                     }
                     else
@@ -132,7 +136,9 @@ namespace batalha_naval
                 {
                     if(listaQuantidadeFrota[2] == 0)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("***Você já colocou seus Destroyers***");
+                        Console.ResetColor();
                         validador = false;
                     }
                     else
@@ -144,7 +150,9 @@ namespace batalha_naval
                 {
                     if(listaQuantidadeFrota[3] == 0)
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("***Você já colocou seus Submarinos***");
+                        Console.ResetColor();
                         validador = false;
                     }
                     else
@@ -161,8 +169,18 @@ namespace batalha_naval
             (bool,string[,],List<int>) validaEntrada = (true, posicoesPlayer,listaQuantidadeFrota);
             string coordenadas;
             bool controleEntrada = false;
+            string[,] tabuleiroAuxilar = new string[10,10];
+            for(var i = 0; i < 10; i++)
+            {
+                for(var j = 0; j < 10; j++)
+                {
+                    tabuleiroAuxilar[i,j] = " ";
+                }
+            }
+
             do
             {
+                ConstroiMapa(tabuleiroAuxilar);
                 Console.WriteLine("Qual a sua posição?");
                 coordenadas = Console.ReadLine();
                 controleEntrada = RegexEntrada(coordenadas);
@@ -278,7 +296,7 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        if(posicoesPlayer[indice0,i] == "A")
+                        if(posicoesPlayer[indice0,i] == "X")
                         {
                             validaPorNoMapa = false;
                         }
@@ -287,7 +305,7 @@ namespace batalha_naval
                     {
                         for(int i = menor; i <= maior; i++)
                         {
-                            posicoesPlayer[indice0,i] = "A";
+                            posicoesPlayer[indice0,i] = "X";
                         }
 
                         if(escolha == "PS")
@@ -353,7 +371,7 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        if(posicoesPlayer[i,indice0] == "A")
+                        if(posicoesPlayer[i,indice0] == "X")
                         {
                             Console.WriteLine("conflito");
                             validaPorNoMapa = false;
@@ -363,7 +381,7 @@ namespace batalha_naval
                     {
                         for(int i = menor; i <= maior; i++)
                         {
-                            posicoesPlayer[i,indice0] = "A";
+                            posicoesPlayer[i,indice0] = "X";
                         }
                         if(escolha == "PS")
                         {
@@ -422,7 +440,7 @@ namespace batalha_naval
                         bool validaPorNoMapa = true;
                         for(int i = menor; i <= maior; i++)
                         {
-                            if(posicoesPlayer[indice0,i] == "A")
+                            if(posicoesPlayer[indice0,i] == "X")
                             {
                                 validaPorNoMapa = false;
                             }
@@ -431,7 +449,7 @@ namespace batalha_naval
                         {
                             for(int i = menor; i <= maior; i++)
                             {
-                                posicoesPlayer[indice0,i] = "A";
+                                posicoesPlayer[indice0,i] = "X";
                             }
                             if(escolha == "PS")
                             {
@@ -523,7 +541,7 @@ namespace batalha_naval
                         bool validaPorNoMapa = true;
                         for(int i = menor; i <= maior; i++)
                         {
-                            if(posicoesPlayer[indice0,i] == "A")
+                            if(posicoesPlayer[indice0,i] == "X")
                             {
                                 validaPorNoMapa = false;
                             }
@@ -532,7 +550,7 @@ namespace batalha_naval
                         {
                             for(int i = menor; i <= maior; i++)
                             {
-                                posicoesPlayer[indice0,i] = "A";
+                                posicoesPlayer[indice0,i] = "X";
                             }
                             if(escolha == "PS")
                             {
@@ -634,7 +652,7 @@ namespace batalha_naval
                     bool validaPorNoMapa = true;
                     for(int i = menor; i <= maior; i++)
                     {
-                        if(posicoesPlayer[i,indice0] == "A")
+                        if(posicoesPlayer[i,indice0] == "X")
                         {
                             Console.WriteLine("conflito");
                             validaPorNoMapa = false;
@@ -644,7 +662,7 @@ namespace batalha_naval
                     {
                         for(int i = menor; i <= maior; i++)
                         {
-                            posicoesPlayer[i,indice0] = "A";
+                            posicoesPlayer[i,indice0] = "X";
                         }
                         if(escolha == "PS")
                             {
@@ -722,7 +740,7 @@ namespace batalha_naval
             string[,] tabuleiroParaPlayer1 = new string[10,10];
             string[,] tabuleiroParaPlayer2 = new string[10,10];
             int contagemPlayer1 = 2; //teste
-            int contagemPlayer2 = 14;
+            int contagemPlayer2 = 2; //Tofix
             var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
             
             for(var i = 0; i < 10; i++)
@@ -814,25 +832,58 @@ namespace batalha_naval
                     else if(jogadaPlayer[0] == 'I') indice1 = 8;
                     else indice1 = 9;
                 }
-
-                if(posicoesPlayerOposto[indice1,indice2] == "A")
+                bool acerto = false;
+                if(posicoesPlayerOposto[indice1,indice2] == "X")
                 {
-                    tabuleiroParaPlayer[indice1,indice2] = "A";
+                    tabuleiroParaPlayer[indice1,indice2] = "X";
                     contagemPlayer -=1;
+                    acerto = true;
                 }
                 else
                 {
-                    tabuleiroParaPlayer[indice1,indice2] = "X";
+                    tabuleiroParaPlayer[indice1,indice2] = "A";
                 }
                 if(contagemPlayer == 0)
                 {
                     vencedor = true;
-                    Console.WriteLine($"Parabéns {player}! Você Ganhou!!!"); 
+                    
                 }
                 ConstroiMapa(tabuleiroParaPlayer);
-                Console.Read();
-                Console.WriteLine("tempo de espera ...");
-                Thread.Sleep(5000);
+                if(acerto)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"{player}!");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine(" Você Acertou!!!");
+                    Thread.Sleep(1000);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"{player}, ");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(" Você Errou...");
+                    Thread.Sleep(1000);
+                    Console.ResetColor();
+                }
+                if(vencedor)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"Parabéns ");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write($"{player}!");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(" Você Ganhou!!!");
+                    Thread.Sleep(3000);
+                    Console.ResetColor();
+                }  
+                Console.WriteLine("trocando turno ...");
+                Thread.Sleep(3000);
+                if(!vencedor)
+                {
+                    Console.Clear();
+                }
 
                 return (vencedor, contagemPlayer, tabuleiroParaPlayer);
         }
