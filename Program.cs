@@ -13,6 +13,7 @@ namespace batalha_naval
             Console.Clear();
             int opcaoEscolhida = Entrada();
             if (opcaoEscolhida == 2) Jogar2();
+            if (opcaoEscolhida == 1) Jogar1();
         }
         public static int Entrada()
         {
@@ -875,6 +876,366 @@ namespace batalha_naval
                     Console.Write($"{player}!");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(" Você Ganhou!!!");
+                    Thread.Sleep(3000);
+                    Console.ResetColor();
+                }  
+                Console.WriteLine("trocando turno ...");
+                Thread.Sleep(3000);
+                if(!vencedor)
+                {
+                    Console.Clear();
+                }
+
+                return (vencedor, contagemPlayer, tabuleiroParaPlayer);
+        }
+
+        public static void Jogar1()
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Digite o seu nome");
+            Console.ResetColor();
+            var player1 = Console.ReadLine();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Seu adversário é o Hannibal!!! Prepare-se ... ");
+            Thread.Sleep(2000);
+            Console.ResetColor();
+            var posicoesPlayer1 = PosicoesNoMapa(player1);
+            Console.Clear();
+
+            //gerar posicoes do player 2
+            var posicoesPlayer2 = PosicoesNoMapa();
+            Iniciar(player1, posicoesPlayer1, posicoesPlayer2);
+        }
+
+        //minha primeira sobrecarga
+        public static string[,] PosicoesNoMapa()
+        {
+            var listaQuantidadeFrota = new List<int>{0,0,0,1};
+            var posicoesPlayer = new string[10,10];
+            for(var i = 0; i < 10; i++)
+            {
+                for(var j = 0; j < 10; j++)
+                {
+                    posicoesPlayer[i,j] = " ";
+                }
+            }
+            var resultado = (listaQuantidadeFrota, posicoesPlayer);
+            while(listaQuantidadeFrota.Sum() > 0)
+            {
+            resultado = TipoDaEmbarcacao(listaQuantidadeFrota, posicoesPlayer);
+            listaQuantidadeFrota = resultado.Item1;
+            posicoesPlayer = resultado.Item2;
+            }
+            return posicoesPlayer;
+        }  
+
+        //outra sobrecarga
+        public static (List<int>, string[,]) TipoDaEmbarcacao(List<int> listaQuantidadeFrota, string[,] posicoesPlayer)
+        {
+            bool validador = false;
+            string escolha;
+            string Boss = "";
+            var posicoes = (listaQuantidadeFrota, posicoesPlayer);
+            while(!validador)
+            {
+            
+            //gerar o aleatorios
+            Random frota = new Random();
+            int numeroAleatorio = frota.Next(0,4);
+            string[] entradasFrota = {"PS","NT","DS","SB"};
+            escolha = entradasFrota[numeroAleatorio];
+            validador = RegexEscolhaDaFrota(escolha);
+
+            if(validador == true)
+            {
+                if(escolha == "PS")
+                {
+                    if(listaQuantidadeFrota[0] == 0)
+                    {
+                        validador = false;
+                    }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota,Boss);
+                    }
+                }
+                else if(escolha == "NT")
+                {
+                    if(listaQuantidadeFrota[1] == 0)
+                    {
+                        validador = false;
+                    }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota,Boss);
+                    }
+                }
+                else if(escolha == "DS")
+                {
+                    if(listaQuantidadeFrota[2] == 0)
+                    {
+                        validador = false;
+                    }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota,Boss);
+                    }
+                }
+                else if(escolha == "SB")
+                {
+                    if(listaQuantidadeFrota[3] == 0)
+                    {
+                        validador = false;
+                    }
+                    else
+                    {
+                        posicoes = VerificaCoordenadas(escolha,posicoesPlayer,listaQuantidadeFrota,Boss);
+                    }
+                }          
+            }
+            }
+            return (posicoes.Item1, posicoes.Item2);
+        }
+
+        //mais uma sobrecarga
+        public static (List<int>, string[,]) VerificaCoordenadas(string escolha, string[,] posicoesPlayer, List<int> listaQuantidadeFrota, string Boss)
+        { 
+            (bool,string[,],List<int>) validaEntrada = (true, posicoesPlayer,listaQuantidadeFrota);
+            string coordenadas;
+            bool controleEntrada = false;
+            string[,] tabuleiroAuxilar = new string[10,10];
+            for(var i = 0; i < 10; i++)
+            {
+                for(var j = 0; j < 10; j++)
+                {
+                    tabuleiroAuxilar[i,j] = " ";
+                }
+            }
+            do
+            {
+                //gerar o aleatorios
+                Random posicao = new Random();
+                int numeroAleatorioPosicao = posicao.Next(0,9);
+                string[] entradasLetras = {"A","B","C","D","E","F","G","H","I","J"};
+                string[] entradasNumericas = {"1","2","3","4","5","6","7","8","9","10"};
+                coordenadas = entradasLetras[numeroAleatorioPosicao];
+                numeroAleatorioPosicao = posicao.Next(0,9);
+                coordenadas += entradasNumericas[numeroAleatorioPosicao];
+                numeroAleatorioPosicao = posicao.Next(0,9);
+                coordenadas += entradasLetras[numeroAleatorioPosicao];
+                numeroAleatorioPosicao = posicao.Next(0,9);
+                coordenadas += entradasNumericas[numeroAleatorioPosicao];
+
+                Console.WriteLine(coordenadas);
+
+                controleEntrada = RegexEntrada(coordenadas);
+                if(controleEntrada)
+                {
+                string letras = "ABCDEFGHIJ";
+                string numeros = "1 2 3 4 5 6 7 8 9 10";
+                string[] comecoEfim = new string[2];
+                
+                    if(coordenadas.Length == 4)
+                    {
+                        if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[2])) validaEntrada.Item1 = false;
+                        if(!numeros.Contains(coordenadas[1]) || !numeros.Contains(coordenadas[3])) validaEntrada.Item1 = false;
+
+                        if(validaEntrada.Item1)
+                        {
+                            comecoEfim[0] = $"{coordenadas[0]}{coordenadas[1]}";
+                            comecoEfim[1] = coordenadas.Substring(2); 
+                            validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
+                        }
+                        else{
+                            break;
+                        }                 
+                    }
+                    if(coordenadas.Length == 6)
+                    {
+                        if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaEntrada.Item1 = false;
+                        if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains($"{coordenadas[4]}{coordenadas[5]}")) validaEntrada.Item1 = false;
+                        if(validaEntrada.Item1)
+                        {
+                            comecoEfim[0] = coordenadas.Substring(0,3);
+                            comecoEfim[1] = coordenadas.Substring(3);
+                            validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
+                        }
+                    }
+                    if(coordenadas.Length == 5)
+                    {   
+                        if(letras.Contains(coordenadas[2]))
+                        {
+                            if(!letras.Contains(coordenadas[0])) validaEntrada.Item1 = false;
+                            if(!numeros.Contains(coordenadas[1]) || !numeros.Contains($"{coordenadas[3]}{coordenadas[4]}")) validaEntrada.Item1 = false;
+                            if(validaEntrada.Item1)
+                            {
+                                comecoEfim[0] = coordenadas.Substring(0,2);
+                                comecoEfim[1] = coordenadas.Substring(2);
+                                validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
+                            }
+                        }
+                        else if(numeros.Contains(coordenadas[2]))
+                        {
+                            if(!letras.Contains(coordenadas[0]) || !letras.Contains(coordenadas[3])) validaEntrada.Item1 = false;
+                            if(!numeros.Contains($"{coordenadas[1]}{coordenadas[2]}") || !numeros.Contains(coordenadas[4])) validaEntrada.Item1 = false;
+                            if(validaEntrada.Item1)
+                            {
+                                comecoEfim[0] = coordenadas.Substring(0,3);
+                                comecoEfim[1] = coordenadas.Substring(3);
+                                validaEntrada = VerificaTamanho(comecoEfim, escolha,posicoesPlayer,listaQuantidadeFrota);
+                            }
+                        }
+                        else
+                        { 
+                            validaEntrada.Item1 = false;
+                        }
+                    }
+                }
+
+                
+            }while(!validaEntrada.Item1 || !controleEntrada);
+            return (validaEntrada.Item3, posicoesPlayer);
+        }
+
+        public static void Iniciar(string player1, string[,] posicoesPlayer1, string[,] posicoesPlayer2)
+        {
+            Console.WriteLine("vamos ao jogo");
+            bool vencedor = false;
+            string[,] tabuleiroParaPlayer1 = new string[10,10];
+            string[,] tabuleiroParaPlayer2 = new string[10,10];
+            int contagemPlayer1 = 2; //teste
+            int contagemPlayer2 = 2; //Tofix
+            var resultado = (vencedor, contagemPlayer1, tabuleiroParaPlayer1);
+            
+            for(var i = 0; i < 10; i++)
+            {
+                for(var j = 0; j < 10; j++)
+                {
+                    tabuleiroParaPlayer1[i,j] = " ";
+                    tabuleiroParaPlayer2[i,j] = " ";
+                }
+            }
+            
+            while(!vencedor)
+            {
+                resultado = Jogada(player1, tabuleiroParaPlayer1, posicoesPlayer2, contagemPlayer1, vencedor);
+                vencedor = resultado.Item1;
+                contagemPlayer1 = resultado.Item2;
+                tabuleiroParaPlayer1 = resultado.Item3;
+                
+
+                if(vencedor == false)
+                {
+                    resultado = Jogada(tabuleiroParaPlayer2, posicoesPlayer1, contagemPlayer2, vencedor);
+                    vencedor = resultado.Item1;
+                    contagemPlayer2 = resultado.Item2;
+                    tabuleiroParaPlayer2 = resultado.Item3;
+                }
+            }
+        }
+
+        public static (bool, int, string[,]) Jogada(string[,] tabuleiroParaPlayer, string[,] posicoesPlayerOposto, int contagemPlayer, bool vencedor)
+        {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Hannibal jogou");
+                
+                string jogadaPlayer;
+                Console.ResetColor();
+                //gerar o aleatorios
+                Random posicao = new Random();
+                int numeroAleatorioPosicao = posicao.Next(0,9);
+                string[] entradasLetras = {"A","B","C","D","E","F","G","H","I","J"};
+                string[] entradasNumericas = {"1","2","3","4","5","6","7","8","9","10"};
+                jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
+                numeroAleatorioPosicao = posicao.Next(0,9);
+                jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
+
+                Console.WriteLine(jogadaPlayer);
+
+                while(!RegexValidaJogada(jogadaPlayer))
+                {
+                    jogadaPlayer = entradasLetras[numeroAleatorioPosicao];
+                    numeroAleatorioPosicao = posicao.Next(0,9);
+                    jogadaPlayer += entradasNumericas[numeroAleatorioPosicao];
+                }
+                Console.Clear();
+                int indice1 = -1;
+                int indice2 = -1;
+                if(jogadaPlayer.Length == 2)
+                {
+                    if(jogadaPlayer[1] == '1') indice2 = 0;
+                    else if(jogadaPlayer[1] == '2') indice2 = 1;
+                    else if(jogadaPlayer[1] == '3') indice2 = 2;
+                    else if(jogadaPlayer[1] == '4') indice2 = 3;
+                    else if(jogadaPlayer[1] == '5') indice2 = 4;
+                    else if(jogadaPlayer[1] == '6') indice2 = 5;
+                    else if(jogadaPlayer[1] == '7') indice2 = 6;
+                    else if(jogadaPlayer[1] == '8') indice2 = 7;
+                    else if(jogadaPlayer[1] == '9') indice2 = 8;
+                    else indice2 = 9;
+
+                    if(jogadaPlayer[0] == 'A') indice1 = 0;
+                    else if(jogadaPlayer[0] == 'B') indice1 = 1;
+                    else if(jogadaPlayer[0] == 'C') indice1 = 2;
+                    else if(jogadaPlayer[0] == 'D') indice1 = 3;
+                    else if(jogadaPlayer[0] == 'E') indice1 = 4;
+                    else if(jogadaPlayer[0] == 'F') indice1 = 5;
+                    else if(jogadaPlayer[0] == 'G') indice1 = 6;
+                    else if(jogadaPlayer[0] == 'H') indice1 = 7;
+                    else if(jogadaPlayer[0] == 'I') indice1 = 8;
+                    else indice1 = 9;
+                }
+                else if(jogadaPlayer.Length == 3)
+                {
+                    indice2 = 9;
+
+                    if(jogadaPlayer[0] == 'A') indice1 = 0;
+                    else if(jogadaPlayer[0] == 'B') indice1 = 1;
+                    else if(jogadaPlayer[0] == 'C') indice1 = 2;
+                    else if(jogadaPlayer[0] == 'D') indice1 = 3;
+                    else if(jogadaPlayer[0] == 'E') indice1 = 4;
+                    else if(jogadaPlayer[0] == 'F') indice1 = 5;
+                    else if(jogadaPlayer[0] == 'G') indice1 = 6;
+                    else if(jogadaPlayer[0] == 'H') indice1 = 7;
+                    else if(jogadaPlayer[0] == 'I') indice1 = 8;
+                    else indice1 = 9;
+                }
+                bool acerto = false;
+                if(posicoesPlayerOposto[indice1,indice2] == "X")
+                {
+                    tabuleiroParaPlayer[indice1,indice2] = "X";
+                    contagemPlayer -=1;
+                    acerto = true;
+                }
+                else
+                {
+                    tabuleiroParaPlayer[indice1,indice2] = "A";
+                }
+                if(contagemPlayer == 0)
+                {
+                    vencedor = true;
+                    
+                }
+                ConstroiMapa(tabuleiroParaPlayer);
+                if(acerto)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"Hannibal Acertou!");
+                    Thread.Sleep(2000);
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write($"Hannibal Errou...");
+                    Thread.Sleep(2000);
+                    Console.ResetColor();
+                }
+                if(vencedor)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(" Você Perdeu para o Hannibal!!!");
                     Thread.Sleep(3000);
                     Console.ResetColor();
                 }  
