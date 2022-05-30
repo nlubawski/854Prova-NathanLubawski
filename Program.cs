@@ -11,10 +11,10 @@ namespace batalha_naval
         static void Main(string[] args)
         {
             Console.Clear();
-            //Jogar3(); //opcao em construcao pra por maquina x maquina 
             int opcaoEscolhida = Entrada();
             if (opcaoEscolhida == 2) Jogar2();
             if (opcaoEscolhida == 1) Jogar1();
+            if (opcaoEscolhida == 3) Jogar3();
         }
         public static int Entrada()
         {
@@ -37,9 +37,10 @@ namespace batalha_naval
             ");
                 Console.WriteLine("Jogar contra o computador digite 1");
                 Console.WriteLine("Jogar contra adversário real digite 2");
+                Console.WriteLine("Existe um número secreto (entre 3 e 9 inclusos) pra ver duelo entre vilões");
                 var opcao = Console.ReadLine();
                 opcaoControle = int.TryParse(opcao, out opcaoEscolhida);
-                if(opcaoEscolhida != 1 && opcaoEscolhida !=2) opcaoControle = false;        
+                if(opcaoEscolhida != 1 && opcaoEscolhida !=2 && opcaoEscolhida !=3) opcaoControle = false;        
             }while(!opcaoControle);
             return opcaoEscolhida;
         }  
@@ -170,6 +171,7 @@ namespace batalha_naval
             string coordenadas;
             bool controleEntrada = false;
             string[,] tabuleiroAuxilar = new string[10,10];
+            var tentativas = new List<string>();
             for(var i = 0; i < 10; i++)
             {
                 for(var j = 0; j < 10; j++)
@@ -183,8 +185,9 @@ namespace batalha_naval
                 Console.WriteLine("Qual a sua posição?");
                 coordenadas = Console.ReadLine();
                 controleEntrada = RegexEntrada(coordenadas);
-                if(controleEntrada)
+                if(controleEntrada && !tentativas.Contains(coordenadas))
                 {
+                tentativas.Add(coordenadas);
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
@@ -869,7 +872,7 @@ namespace batalha_naval
         }
         public static string[,] PosicoesNoMapa()
         {
-            var listaQuantidadeFrota = new List<int>{0,0,0,1};
+            var listaQuantidadeFrota = new List<int>{1,2,3,4};
             var posicoesPlayer = new string[10,10];
             for(var i = 0; i < 10; i++)
             {
@@ -956,6 +959,7 @@ namespace batalha_naval
             string coordenadas;
             bool controleEntrada = false;
             string[,] tabuleiroAuxilar = new string[10,10];
+            var tentativas = new List<string>();
             for(var i = 0; i < 10; i++)
             {
                 for(var j = 0; j < 10; j++)
@@ -977,8 +981,10 @@ namespace batalha_naval
                 numeroAleatorioPosicao = posicao.Next(0,10);
                 coordenadas += entradasNumericas[numeroAleatorioPosicao];
                 controleEntrada = RegexEntrada(coordenadas);
-                if(controleEntrada)
+
+                if(controleEntrada && !tentativas.Contains(coordenadas))
                 {
+                tentativas.Add(coordenadas);
                 string letras = "ABCDEFGHIJ";
                 string numeros = "1 2 3 4 5 6 7 8 9 10";
                 string[] comecoEfim = new string[2];
